@@ -26,6 +26,10 @@ public class Gambler{
     }
     
     //Setters
+    public void giveMoney(int give)
+    {
+        totalMoney+=give;
+    }
     public void win(int moneyWon){
         wins++;
         totalMoney += moneyWon;

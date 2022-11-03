@@ -6,6 +6,8 @@ import java.io.*;
 public class Blackjack {
     Gambler player;
     Gambler dealer;
+    DynamicHand playerHand;
+    DynamicHand dealerHand;
     CardDeck deck;
     int bet=0;
     String choice;
@@ -19,6 +21,8 @@ public class Blackjack {
         deck = new CardDeck(false);
         player = player_;
         dealer = new Gambler(new DynamicHand(), 0);
+        playerHand=player.getHand();
+        dealerHand=dealer.getHand();
         
         
         open = true;
@@ -39,6 +43,17 @@ public class Blackjack {
             if(temp.matches("^[0-9]*[1-9][0-9]*$")) //checks to see if input in only numbers, not equal to 0
             {
                 bet=Integer.parseInt(temp);
+                if(bet>player.getMoney())
+                {
+                    bet=0;
+                    System.out.println("You cannot bet more than you have deposited in your account. \nTo deposit more money, type M. \nTo enter a lower bet, press B");
+                    if(input.nextLine().equals("M"))
+                    {
+                        System.out.print("Add: ");
+                        player.giveMoney(Integer.parseInt(input.nextLine()));
+                    }
+                   
+                }
             }
             else
             {
