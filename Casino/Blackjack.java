@@ -30,7 +30,7 @@ public class Blackjack {
             System.out.print("Place your bet: ");
             String temp = input.nextLine();
 
-            if(temp.matches("^[0-9]*[1-9][0-9]*$"))
+            if(temp.matches("^[0-9]*[1-9][0-9]*$")) //checks to see if input in only numbers, not equal to 0
             {
                 bet=Integer.parseInt(temp);
             }

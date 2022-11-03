@@ -4,11 +4,11 @@ import static java.lang.System.out;
 import java.io.*;
 import java.util.*;
 
-public class Hand{
+public class StaticHand{
     Card[] cards;
 
     //Creates hand with an array of cards
-    public Hand(int size, Card[] _cards){
+    public StaticHand(int size, Card[] _cards){
         cards = new Card[size];
         try{
             cards = _cards;
@@ -19,7 +19,7 @@ public class Hand{
     }
 
     //Creates empty hand
-    public Hand(int size){
+    public StaticHand(int size){
         cards = new Card[size];
     }
     
