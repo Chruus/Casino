@@ -4,6 +4,8 @@ import java.security.cert.TrustAnchor;
 
 
 public class Blackjack {
+    DynamicHand player;
+    DynamicHand dealer;
     CardDeck deck;
     int bet=0;
     String choice;
@@ -14,13 +16,15 @@ public class Blackjack {
     public Blackjack()
     {
         deck = new CardDeck(false);
+        player = new DynamicHand();
+        dealer = new DynamicHand();
         
         open = true;
     }
     public void play()
     {
-        //setup();
-        prompt();
+        
+        prompt("sup!");
     }
     public void setup()
     {
@@ -63,10 +67,18 @@ public class Blackjack {
         end();
         return promptAnswer;
     }
-
+    
+    public String prompt(String prompter)
+    {
+        System.out.print(prompter);
+        promptAnswer=input.nextLine();
+        return promptAnswer;
+    }
     public void end()
     {
         //input.close();
         open = false;
     }
 }
+
+

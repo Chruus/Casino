@@ -15,10 +15,7 @@ public class DynamicHand{
         
     }
 
-    //Creates empty hand
-    /*public DynamicHand(int size){
-        cards = new Card[size];
-    }*/
+    
     
     //Checks if hand has a card in it
     public boolean hasCard(Card cardCheck){
@@ -78,7 +75,7 @@ public class DynamicHand{
         {
             Card temp = cards.get(i);
             output += "(";
-            output += Integer.toString(i);
+            output += Integer.toString(i+1);
             output += ")\t";
             output += "Suit: ";
             output += temp.getSuit();
