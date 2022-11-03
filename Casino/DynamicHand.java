@@ -59,10 +59,10 @@ public class DynamicHand{
         return output;
     }
 
-    public String showDeck()
+    public String showHand()
     {
         String output = "";
-        for(int i = 0; i<cards.size()-1; i++)
+        for(int i = 0; i<cards.size(); i++)
         {
             Card temp = cards.get(i);
             output += "(";

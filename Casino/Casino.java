@@ -14,7 +14,10 @@ public class Casino{
         
         UI ui = new UI(new Dice(6), new CardDeck(true));
         //Hand hand1 = new Hand(7);
-        
+        //DynamicHand hand = new DynamicHand();
+        //Card one = new Card("9", "spades");
+        //hand.addCard(one);
+        //System.out.println(hand.showHand());
         while(!line.equals("exit")){
             //ui.blackjack(input, line);
             if(line.equals("blackjack"))
