@@ -13,7 +13,7 @@ public class Casino{
         
         String line = input.nextLine();
         double startingMoney = Double.parseDouble(line);
-
+        out.print("Enter which game you would like to play (blackjack) : ");
         Gambler bot = new Gambler(new DynamicHand(), startingMoney);
         UI ui = new UI(new Dice(6), new CardDeck(true));
         //Hand hand1 = new Hand(7);
@@ -26,7 +26,7 @@ public class Casino{
             if(line.equals("blackjack"))
             {
                 Blackjack game = new Blackjack(bot);
-                game.setup();
+                
                 do
                 {
     
