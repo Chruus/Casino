@@ -1,4 +1,7 @@
 import java.util.*;
+
+import javax.lang.model.util.ElementScanner6;
+
 import java.io.*;
 
 
@@ -47,10 +50,30 @@ public class Blackjack {
                 {
                     bet=0;
                     System.out.println("You cannot bet more than you have deposited in your account. \nTo deposit more money, type M. \nTo enter a lower bet, press B");
-                    if(input.nextLine().equals("M"))
+                    String temp3 = input.nextLine();
+                    if(temp3.equals("M"))
                     {
                         System.out.print("Add: ");
                         player.giveMoney(Integer.parseInt(input.nextLine()));
+                    }
+                    else if(!temp3.equals("B"))
+                    {
+                        //input.nextLine();
+                        String temp2 = "bruhh";
+                        
+                        do
+                        {   
+                            System.out.println("You must enter either M or B");
+                            System.out.print("Decision: ");
+                            temp2 = input.nextLine();
+
+                        }while(!temp2.equals("M") && !temp2.equals("B"));
+                        if(temp2.equals("M"))
+                        {
+                            System.out.print("Add: ");
+                            player.giveMoney(Integer.parseInt(input.nextLine()));
+                        }
+                        
                     }
                    
                 }
