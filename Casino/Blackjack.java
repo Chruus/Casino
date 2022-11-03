@@ -1,7 +1,6 @@
 import java.util.*;
 
-import javax.lang.model.util.ElementScanner6;
-
+import java.lang.*;
 import java.io.*;
 
 
@@ -15,8 +14,9 @@ public class Blackjack {
     int bet=0;
     String choice;
     Scanner input = new Scanner(System.in);
-    String promptAnswer;
+    String promptAnswer = "";
     private boolean open;
+    private boolean setupDone=false;;
     
     public Blackjack(Gambler player_)
     {
@@ -26,14 +26,21 @@ public class Blackjack {
         dealer = new Gambler(new DynamicHand(), 0);
         playerHand=player.getHand();
         dealerHand=dealer.getHand();
-        
-        
         open = true;
     }
     public void play()
     {
+        if(!setupDone)
+        {
+            setup();
+        }
+        else
+        {
+            prompt("sup!");
+        }
+       
+
         
-        prompt("sup!");
     }
     public void setup()
     {
@@ -83,6 +90,7 @@ public class Blackjack {
                 System.out.println("Enter only an integer > 0");
             }
         }while(bet==0);
+        setupDone=true;
 
         
 
