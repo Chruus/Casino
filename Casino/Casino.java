@@ -20,8 +20,10 @@ public class Casino{
             if(line.equals("blackjack"))
             {
                 Blackjack game = new Blackjack();
+                game.setup();
                 do
                 {
+    
                     game.play();
                 }while(!game.isBye());
                
