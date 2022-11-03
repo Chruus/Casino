@@ -7,11 +7,14 @@ import java.util.*;
 public class Card{
     private String card;
     private String suit;
+
+    //Allows cards to be made directly w/ strings
     Card(String _card, String _suit){
         card = _card;
         suit = _suit;
     }
     
+    //Allows cards to be set up w/ for loop
     Card(int _card, int _suit){
         if(_card <= 10)
             card = Integer.toString(_card);
@@ -36,14 +39,13 @@ public class Card{
             suit = "spades";
     }
     
+    //Getters
     public String getSuit(){
         return suit;
     }
-    
     public String getCard(){
         return card;
     }
-    
     public String getCardValueToString(){
         if(card.equals("joker"))
             return "The card is a joker.";
