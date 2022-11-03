@@ -19,7 +19,7 @@ public class CardDeck{
                     int suit = deckPos/13;
                     int card = deckPos - 13*suit + 1;
                     suit ++;
-                    out.println(suit + " " + card);
+                    //out.println(suit + " " + card);
                     deck.add(deckPos, new Card(card, suit));
                 }
                 else

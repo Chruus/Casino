@@ -14,7 +14,25 @@ public class UI{
         die = _die;
         deck = _deck;
     }
-    
+    /*public void blackjack(Scanner input, String line)
+    {
+        if(line.indexOf("blackjack")>=0)
+        {
+            Blackjack game = new Blackjack();
+            do
+            {
+                out.println("WOW" + game.prompt());
+            } while(!input.next().equals("bye"));
+            
+                
+                
+                
+               
+                  
+            
+            
+        }
+    }*/
     public void dice(Scanner input, String line){
         //Rolling dice
         if(line.indexOf("roll") >= 0){

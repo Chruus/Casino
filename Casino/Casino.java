@@ -16,8 +16,23 @@ public class Casino{
         //Hand hand1 = new Hand(7);
         
         while(!line.equals("exit")){
-            ui.dice(input, line);
-            ui.cardDeck(input, line);
+            //ui.blackjack(input, line);
+            if(line.equals("blackjack"))
+            {
+                Blackjack game = new Blackjack();
+                do
+                {
+                    out.println(game.prompt());
+                }while(!game.isBye());
+               
+                
+            }
+            else
+            {
+                ui.dice(input, line);
+                ui.cardDeck(input, line);
+            }
+            
                 
             line = input.nextLine();
         }
