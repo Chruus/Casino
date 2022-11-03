@@ -42,7 +42,7 @@ public class Hand{
         return cardOut;
     }
     
-    /*public Card removeCard(Card cardOut){
+   /*  public Card removeCard(Card cardOut){
         for(int i = 0; i < cards.length; i++){
             if(cards[i].getCard() == cardOut.getCard() && cards[i].getSuit() == cardOut.getSuit())
                 
