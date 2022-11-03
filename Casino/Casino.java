@@ -22,7 +22,7 @@ public class Casino{
                 Blackjack game = new Blackjack();
                 do
                 {
-                    out.println(game.prompt());
+                    game.play();
                 }while(!game.isBye());
                
                 

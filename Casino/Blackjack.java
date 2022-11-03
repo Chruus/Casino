@@ -7,7 +7,7 @@ public class Blackjack {
     int bet;
     String choice;
     Scanner input = new Scanner(System.in);
-    String promptAnswer;;
+    String promptAnswer;
     private boolean open;
     
     public Blackjack()
@@ -16,7 +16,10 @@ public class Blackjack {
         
         open = true;
     }
-
+    public void play()
+    {
+        prompt();
+    }
     public boolean isOpen()
     {
         return open;
@@ -25,12 +28,14 @@ public class Blackjack {
     {
         return (promptAnswer.equals("bye"))? true : false;
     }
+    
     public String prompt()
     {
 
         System.out.println("Welcome to Blackjack!");
         System.out.print("Please enter a number: ");
         promptAnswer = input.nextLine();
+        System.out.println(promptAnswer);
         return promptAnswer;
     }
 
