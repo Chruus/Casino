@@ -15,10 +15,7 @@ public class DynamicHand{
         
     }
 
-    //Creates empty hand
-    /*public DynamicHand(int size){
-        cards = new Card[size];
-    }*/
+    
     
     //Adds card into hand
     public String addCard(Card cardIn){
@@ -66,7 +63,7 @@ public class DynamicHand{
         {
             Card temp = cards.get(i);
             output += "(";
-            output += Integer.toString(i);
+            output += Integer.toString(i+1);
             output += ")\t";
             output += "Suit: ";
             output += temp.getSuit();
