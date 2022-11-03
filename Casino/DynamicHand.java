@@ -17,6 +17,18 @@ public class DynamicHand{
 
     
     
+    //Checks if hand has a card in it
+    public boolean hasCard(Card cardCheck){
+        for(Card c : cards)
+        {
+            if(c.getCard() == cardCheck.getCard() && c.getSuit() == cardCheck.getSuit())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Adds card into hand
     public String addCard(Card cardIn){
        
