@@ -4,8 +4,8 @@ import java.io.*;
 
 
 public class Blackjack {
-    DynamicHand player;
-    DynamicHand dealer;
+    Gambler player;
+    Gambler dealer;
     CardDeck deck;
     int bet=0;
     String choice;
@@ -13,11 +13,13 @@ public class Blackjack {
     String promptAnswer;
     private boolean open;
     
-    public Blackjack()
+    public Blackjack(Gambler player_)
     {
+        
         deck = new CardDeck(false);
-        player = new DynamicHand();
-        dealer = new DynamicHand();
+        player = player_;
+        dealer = new Gambler(new DynamicHand(), 0);
+        
         
         open = true;
     }
