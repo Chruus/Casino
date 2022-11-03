@@ -12,7 +12,7 @@ public class Casino{
         Scanner input = new Scanner(System.in);
         String line = input.nextLine();
         
-        UI ui = new UI(new Dice(6), new CardDeck(false));
+        UI ui = new UI(new Dice(6), new CardDeck(true));
         //Hand hand1 = new Hand(7);
         
         while(!line.equals("exit")){
