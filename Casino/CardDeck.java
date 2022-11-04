@@ -52,7 +52,7 @@ public class CardDeck{
         return deck.get(pos).getCard() + " " + deck.get(pos).getSuit();
     }
     public int getDeckSize(){
-        return deckSize;
+        return deck.size();
     }
     
     //Shuffles deck

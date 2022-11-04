@@ -29,6 +29,14 @@ public class DynamicHand{
         return false;
     }
 
+    public int getHandSize(){
+        return cards.size();
+    }
+    
+    public Card getCard(int index){
+        return cards.get(index);
+    }
+
     //Adds card into hand
     public String addCard(Card cardIn){
        
