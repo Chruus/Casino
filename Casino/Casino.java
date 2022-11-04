@@ -16,25 +16,21 @@ public class Casino{
         out.print("Enter which game you would like to play (blackjack) : ");
         Gambler bot = new Gambler(new DynamicHand(), startingMoney);
         UI ui = new UI(new Dice(6), new CardDeck(true));
-        //Hand hand1 = new Hand(7);
-        //DynamicHand hand = new DynamicHand();
-        //Card one = new Card("9", "spades");
-        //hand.addCard(one);
-        //System.out.println(hand.showHand());
+
+
         while(!line.equals("exit")){
-            //ui.blackjack(input, line);
             if(line.equals("blackjack"))
             {
                 Blackjack game = new Blackjack(bot);
                 
                 do
                 {
-    
                     game.play();
-                }while(!game.isBye());
-               
+                }
+                while(!game.isBye());
                 
             }
+
             else if(line.equals("texas holdem")){
                 ArrayList <Gambler> players = new ArrayList <Gambler>();
                 players.add(new Gambler(null, startingMoney));
@@ -42,13 +38,12 @@ public class Casino{
                 while(!line.equals("exit"))
                     game.main();
             }
-            else
-            {
+
+            else{
                 ui.dice(input, line);
                 ui.cardDeck(input, line);
             }
             
-                
             line = input.nextLine();
         }
         
