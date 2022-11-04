@@ -1,12 +1,12 @@
 public class Gambler{
-    double totalMoney;
+    double balance;
     int wins;
     int losses;
     DynamicHand hand;
 
     public Gambler(DynamicHand _hand, double startingMoney){
         hand = _hand;
-        totalMoney = startingMoney;
+        balance = startingMoney;
         wins = 0;
         losses = 0;
     }
@@ -21,30 +21,37 @@ public class Gambler{
     public int getLosses(){
         return losses;
     }
-    public double getMoney(){
-        return totalMoney;
+    public double getBalance(){
+        return balance;
     }
     
     //Setters
     public void giveMoney(int give)
     {
-        totalMoney+=give;
+        balance += give;
+    }
+    public String takeMoney(double taken){
+        if(balance >= taken){
+            balance -= taken;
+            return "You now have $" + balance + " left";
+        }
+        return "You do not have enough money";
     }
     public void win(int moneyWon){
         wins++;
-        totalMoney += moneyWon;
+        balance += moneyWon;
     }
     public void win(int moneyWon, int numberOfWins){
         wins += numberOfWins;
-        totalMoney += moneyWon;
+        balance += moneyWon;
     }
     public void lose(int moneyLost){
         losses ++;
-        totalMoney -= moneyLost;
+        balance -= moneyLost;
     }
     public void lose(int moneyLost, int numberOfLosses){
         losses += numberOfLosses;
-        totalMoney -= moneyLost;
+        balance -= moneyLost;
     }
 
 }

@@ -53,7 +53,7 @@ public class Blackjack {
             if(temp.matches("^[0-9]*[1-9][0-9]*$")) //checks to see if input in only numbers, not equal to 0
             {
                 bet=Integer.parseInt(temp);
-                if(bet>player.getMoney())
+                if(bet>player.getBalance())
                 {
                     bet=0;
                     System.out.println("You cannot bet more than you have deposited in your account. \nTo deposit more money, type M. \nTo enter a lower bet, press B");

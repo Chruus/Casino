@@ -35,6 +35,13 @@ public class Casino{
                
                 
             }
+            else if(line.equals("texas holdem")){
+                ArrayList <Gambler> players = new ArrayList <Gambler>();
+                players.add(new Gambler(null, startingMoney));
+                TexasHoldem game = new TexasHoldem(1);
+                while(!line.equals("exit"))
+                    game.main();
+            }
             else
             {
                 ui.dice(input, line);
