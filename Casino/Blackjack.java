@@ -36,11 +36,25 @@ public class Blackjack {
         }
         else
         {
-            prompt("sup!");
+            main();
         }
        
 
         
+    }
+    public void main()
+    {
+        String answer =prompt("Do you know how to play Blackjack? (y/n): ");
+        if(answer.equals("y"))
+        {
+            System.out.println("Great! Let us begin.");
+        
+            
+        }
+        else if(answer.equals("n"))
+        {
+            
+        }
     }
     public void setup()
     {
