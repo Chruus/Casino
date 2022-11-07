@@ -27,7 +27,8 @@ public class Casino{
                 {
                     game.play();
                 }
-                while(!game.isBye());
+                while(game.isOpen());
+                bot.setMoney(game.getPlayerBalance());
                 
             }
 

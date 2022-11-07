@@ -30,6 +30,10 @@ public class Gambler{
     {
         balance += give;
     }
+    public void setMoney(double money)
+    {
+        balance=money;
+    }
     public String takeMoney(double taken){
         if(balance >= taken){
             balance -= taken;
