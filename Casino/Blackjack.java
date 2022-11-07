@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.lang.model.util.ElementScanner6;
+
 import java.lang.*;
 import java.io.*;
 
@@ -38,6 +40,7 @@ public class Blackjack {
         {
             setup();
             knowRules();
+            giveCards();
         }
         else
         {
@@ -52,6 +55,19 @@ public class Blackjack {
     public void main()
     {
         
+        
+
+        
+         
+        
+        hitStand();
+
+    
+        //System.out.print("choice");
+
+        
+    }
+    private void giveCards() {
         deck.shuffle();
         //System.out.println(deck.getDeckSize());
         playerHand.addCard(deck.drawCard(false));
@@ -115,15 +131,25 @@ public class Blackjack {
             System.out.println("You and the dealer both got a natural! To play again, simply enter \"blackjack\" again on the game select promp!");
             end();
         }
+    }
+    private void hitStand() {
+        String temp  = prompt("Make your choice (hit/stand): ");
+        if(temp.equals("hit"))
+        {
+            playerHand.addCard(deck.drawCard(false));
+            System.out.println("Here is your hand!: \n");
+            System.out.println(playerHand.showHand(false));
 
-        
-         
-        
-        prompt("Temp");
-    
-        //System.out.print("choice");
-
-        
+        }
+        else if(temp.equals("stand"))
+        {
+           
+        }
+        else
+        {
+           
+            hitStand();
+        }
     }
     private void knowRules() {
         String answer;
