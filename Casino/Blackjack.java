@@ -61,6 +61,40 @@ public class Blackjack {
          
         
         hitStand();
+        int cardTotal=0;
+        for(int i = 0; i<playerHand.getHandSize(); i++)
+        {
+            int tempAdd;
+            Card c = playerHand.getCard(i);
+            if(c.getCard().equals("jack") 
+            || c.getCard().equals("queen")
+            || c.getCard().equals("king"))
+            {
+                tempAdd=10;
+            }
+            else if(c.getCard().equals("ace"))
+            {
+                tempAdd=1;
+            }
+            else
+            {
+                tempAdd = Integer.parseInt(c.getCard());
+            }
+            cardTotal+=tempAdd;
+        }
+        if(cardTotal>21)
+        {
+            System.out.println("Bust! Your hand was:\n" + playerHand.showHand(true) + "which totals >21!\nThe dealer had:\n" + dealerHand.showHand(true));
+            
+            System.out.println("You lost: $" + bet);
+            System.out.println("To play again, just type \"blackjack\"");
+            end();
+        }
+        else if(cardTotal==21)
+        {
+            System.out.println("You win! The dealers hand was:\n" + dealerHand.showHand(true) + "and yours was:\n" + playerHand.showHand(true));
+            System.out.println("You earned: $" + bet +" leaving you with a total balance of: $" + player.getBalance());
+        }
 
     
         //System.out.print("choice");
@@ -84,6 +118,10 @@ public class Blackjack {
         {
             val1=10;
         }
+        else if(playerHand.getCard(0).getCard().equals("ace"))
+        {
+            val1=1;
+        }
         else
         {
             val1 = Integer.parseInt(playerHand.getCard(0).getCard());
@@ -94,6 +132,10 @@ public class Blackjack {
         || playerHand.getCard(1).getCard().equals("king"))
         {
             val2=10;
+        }
+        else if(playerHand.getCard(1).getCard().equals("ace"))
+        {
+            val2=1;
         }
         else
         {
@@ -108,6 +150,10 @@ public class Blackjack {
         {
             dval1=10;
         }
+        else if(dealerHand.getCard(0).getCard().equals("ace"))
+        {
+            dval1=1;
+        }
         else
         {
             dval1 = Integer.parseInt(dealerHand.getCard(0).getCard());
@@ -117,6 +163,10 @@ public class Blackjack {
         || dealerHand.getCard(1).getCard().equals("king"))
         {
             dval2=10;
+        }
+        else if(dealerHand.getCard(1).getCard().equals("ace"))
+        {
+            dval2=1;
         }
         else
         {

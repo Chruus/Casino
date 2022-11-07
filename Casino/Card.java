@@ -16,8 +16,13 @@ public class Card{
     
     //Allows cards to be set up w/ for loop
     Card(int _card, int _suit){
-        if(_card <= 10)
+
+        if(_card <= 10 && _card != 1)
             card = Integer.toString(_card);
+        else if(_card==1)
+        {
+            card="ace";
+        }
         else if(_card == 11)
             card = "jack";
         else if(_card == 12)
