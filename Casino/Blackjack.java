@@ -61,40 +61,8 @@ public class Blackjack {
          
         
         hitStand();
-        int cardTotal=0;
-        for(int i = 0; i<playerHand.getHandSize(); i++)
-        {
-            int tempAdd;
-            Card c = playerHand.getCard(i);
-            if(c.getCard().equals("jack") 
-            || c.getCard().equals("queen")
-            || c.getCard().equals("king"))
-            {
-                tempAdd=10;
-            }
-            else if(c.getCard().equals("ace"))
-            {
-                tempAdd=1;
-            }
-            else
-            {
-                tempAdd = Integer.parseInt(c.getCard());
-            }
-            cardTotal+=tempAdd;
-        }
-        if(cardTotal>21)
-        {
-            System.out.println("Bust! Your hand was:\n" + playerHand.showHand(true) + "which totals >21!\nThe dealer had:\n" + dealerHand.showHand(true));
-            
-            System.out.println("You lost: $" + bet);
-            System.out.println("To play again, just type \"blackjack\"");
-            end();
-        }
-        else if(cardTotal==21)
-        {
-            System.out.println("You win! The dealers hand was:\n" + dealerHand.showHand(true) + "and yours was:\n" + playerHand.showHand(true));
-            System.out.println("You earned: $" + bet +" leaving you with a total balance of: $" + player.getBalance());
-        }
+
+
 
     
         //System.out.print("choice");
@@ -189,6 +157,41 @@ public class Blackjack {
             playerHand.addCard(deck.drawCard(false));
             System.out.println("Here is your hand!: \n");
             System.out.println(playerHand.showHand(false));
+            int cardTotal=0;
+            for(int i = 0; i<playerHand.getHandSize(); i++)
+            {
+                int tempAdd;
+                Card c = playerHand.getCard(i);
+                if(c.getCard().equals("jack") 
+                || c.getCard().equals("queen")
+                || c.getCard().equals("king"))
+                {
+                    tempAdd=10;
+                }
+                else if(c.getCard().equals("ace"))
+                {
+                    tempAdd=1;
+                }
+                else
+                {
+                    tempAdd = Integer.parseInt(c.getCard());
+                }
+                cardTotal+=tempAdd;
+            }
+            if(cardTotal>21)
+            {
+                System.out.println("Bust! Your hand was:\n" + playerHand.showHand(true) + "which totals >21!\nThe dealer had:\n" + dealerHand.showHand(true));
+                
+                System.out.println("You lost: $" + bet);
+                System.out.println("To play again, just type \"blackjack\"");
+                end();
+            }
+            else if(cardTotal==21)
+            {
+                System.out.println("You win! The dealers hand was:\n" + dealerHand.showHand(true) + "and yours was:\n" + playerHand.showHand(true));
+                player.giveMoney(bet);
+                System.out.println("You earned: $" + bet +" leaving you with a total balance of: $" + player.getBalance());
+            }
 
         }
         else if(temp.equals("stand"))
