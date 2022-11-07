@@ -76,7 +76,7 @@ public class DynamicHand{
         return output;
     }
 
-    public String showHand()
+    public String showHand(boolean suit)
     {
         String output = "";
         for(int i = 0; i<cards.size(); i++)
@@ -85,9 +85,13 @@ public class DynamicHand{
             output += "(";
             output += Integer.toString(i+1);
             output += ")\t";
-            output += "Suit: ";
-            output += temp.getSuit();
-            output += "\t";
+            if(suit)
+            {
+                output += "Suit: ";
+                output += temp.getSuit();
+                output += "\t";
+            }
+            
             output += "Card: ";
             output += temp.getCard();
             output += "\n";

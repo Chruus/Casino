@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.lang.model.util.ElementScanner6;
+
 import java.lang.*;
 import java.io.*;
 
@@ -28,18 +30,199 @@ public class Blackjack {
         dealerHand=dealer.getHand();
         open = true;
     }
+    public double getPlayerBalance()
+    {
+        return player.getBalance();
+    }
     public void play()
     {
         if(!setupDone)
         {
             setup();
+            knowRules();
+            giveCards();
         }
         else
         {
-            prompt("sup!");
+            
+            main();
+            isBye();
         }
        
 
+        
+    }
+    public void main()
+    {
+        
+        
+
+        
+         
+        
+        hitStand();
+
+
+
+    
+        //System.out.print("choice");
+
+        
+    }
+    private void giveCards() {
+        deck.shuffle();
+        //System.out.println(deck.getDeckSize());
+        playerHand.addCard(deck.drawCard(false));
+        playerHand.addCard(deck.drawCard(false));
+        dealerHand.addCard(deck.drawCard(false));
+        dealerHand.addCard(deck.drawCard(false));
+        System.out.println("Here is your hand!: \n");
+        System.out.println(playerHand.showHand(false));
+        int val1;
+        int val2;
+        if(playerHand.getCard(0).getCard().equals("jack") 
+        || playerHand.getCard(0).getCard().equals("queen")
+        || playerHand.getCard(0).getCard().equals("king"))
+        {
+            val1=10;
+        }
+        else if(playerHand.getCard(0).getCard().equals("ace"))
+        {
+            val1=1;
+        }
+        else
+        {
+            val1 = Integer.parseInt(playerHand.getCard(0).getCard());
+        }
+
+        if(playerHand.getCard(1).getCard().equals("jack") 
+        || playerHand.getCard(1).getCard().equals("queen")
+        || playerHand.getCard(1).getCard().equals("king"))
+        {
+            val2=10;
+        }
+        else if(playerHand.getCard(1).getCard().equals("ace"))
+        {
+            val2=1;
+        }
+        else
+        {
+            val2 = Integer.parseInt(playerHand.getCard(1).getCard());
+        }
+
+        int dval1;
+        int dval2;
+        if(dealerHand.getCard(0).getCard().equals("jack") 
+        || dealerHand.getCard(0).getCard().equals("queen")
+        || dealerHand.getCard(0).getCard().equals("king"))
+        {
+            dval1=10;
+        }
+        else if(dealerHand.getCard(0).getCard().equals("ace"))
+        {
+            dval1=1;
+        }
+        else
+        {
+            dval1 = Integer.parseInt(dealerHand.getCard(0).getCard());
+        }
+        if(dealerHand.getCard(1).getCard().equals("jack") 
+        || dealerHand.getCard(1).getCard().equals("queen")
+        || dealerHand.getCard(1).getCard().equals("king"))
+        {
+            dval2=10;
+        }
+        else if(dealerHand.getCard(1).getCard().equals("ace"))
+        {
+            dval2=1;
+        }
+        else
+        {
+            dval2 = Integer.parseInt(dealerHand.getCard(1).getCard());
+        }
+
+        if((val1 + val2 == 21) && (dval1 + dval2==21))
+        {
+            System.out.println("Dealer hand: \n");
+            System.out.println(dealerHand.showHand(false));
+            player.giveMoney(bet);
+            System.out.println("You and the dealer both got a natural! To play again, simply enter \"blackjack\" again on the game select promp!");
+            end();
+        }
+    }
+    private void hitStand() {
+        String temp  = prompt("Make your choice (hit/stand): ");
+        if(temp.equals("hit"))
+        {
+            playerHand.addCard(deck.drawCard(false));
+            System.out.println("Here is your hand!: \n");
+            System.out.println(playerHand.showHand(false));
+            int cardTotal=0;
+            for(int i = 0; i<playerHand.getHandSize(); i++)
+            {
+                int tempAdd;
+                Card c = playerHand.getCard(i);
+                if(c.getCard().equals("jack") 
+                || c.getCard().equals("queen")
+                || c.getCard().equals("king"))
+                {
+                    tempAdd=10;
+                }
+                else if(c.getCard().equals("ace"))
+                {
+                    tempAdd=1;
+                }
+                else
+                {
+                    tempAdd = Integer.parseInt(c.getCard());
+                }
+                cardTotal+=tempAdd;
+            }
+            if(cardTotal>21)
+            {
+                System.out.println("Bust! Your hand was:\n" + playerHand.showHand(true) + "which totals >21!\nThe dealer had:\n" + dealerHand.showHand(true));
+                
+                System.out.println("You lost: $" + bet);
+                System.out.println("To play again, just type \"blackjack\"");
+                end();
+            }
+            else if(cardTotal==21)
+            {
+                System.out.println("You win! The dealers hand was:\n" + dealerHand.showHand(true) + "and yours was:\n" + playerHand.showHand(true));
+                player.giveMoney(bet);
+                System.out.println("You earned: $" + bet +" leaving you with a total balance of: $" + player.getBalance());
+            }
+
+        }
+        else if(temp.equals("stand"))
+        {
+           
+        }
+        else
+        {
+           
+            hitStand();
+        }
+    }
+    private void knowRules() {
+        String answer;
+        answer =prompt("Do you know how to play Blackjack? (y/n): ");
+        if(answer.equals("y"))
+        {
+            System.out.println("Great! Let us begin.");
+        
+            
+        }
+        else if(answer.equals("n"))
+        {
+            System.out.println("RULES ARE A WIP");
+            prompt("Press any key to continue:");
+        }
+        else
+        {
+            knowRules();
+        }
+        
         
     }
     public void setup()
@@ -83,6 +266,7 @@ public class Blackjack {
                         
                     }
                    
+                   
                 }
             }
             else
@@ -90,6 +274,9 @@ public class Blackjack {
                 System.out.println("Enter only an integer > 0");
             }
         }while(bet==0);
+        double returner = player.getBalance()-(double)bet;
+        player.takeMoney((double)bet);
+        System.out.println("Remaining balance: " + returner);
         setupDone=true;
 
         
@@ -100,9 +287,13 @@ public class Blackjack {
     {
         return open;
     }
-    public boolean isBye()
+    public void isBye()
     {
-        return (promptAnswer.equals("bye"))? true : false;
+        if(promptAnswer.equals("bye"))
+        {
+            open=false;
+            System.out.print("Goodbye! Please select what game you would like to play next: ");
+        }
     }
     
     public String prompt()
