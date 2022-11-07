@@ -1,3 +1,6 @@
+//Bugs
+//Can pay more than gambler has
+
 import java.util.*;
 import static java.lang.System.out;
 
@@ -6,21 +9,21 @@ public class TexasHoldem{
     private ArrayList <Gambler> players;
     private CardDeck deck;
     private CardDeck spread;
-    private int bettingRound;
-    private double pool;
+    private int bettingRound = 0;
+    private int numberOfPlayers;
+    private double pool = 0;
 
     //Creates a new game of texas holdem, sets up each player with the same starting amount of money
-    public TexasHoldem(int numberOfPlayers,int startingBalance){
+    public TexasHoldem(int _numberOfPlayers,int startingBalance){
         deck = new CardDeck(false);
         spread = new CardDeck();
         hands = new ArrayList <DynamicHand>();
         players = new ArrayList <Gambler>();
+        numberOfPlayers = _numberOfPlayers;
         for(int i = 0; i < numberOfPlayers; i++){
             hands.add(new DynamicHand());
             players.add(new Gambler(hands.get(i), startingBalance));
         }
-        int pool = 0;
-        int bettingRound = 0;
     }
 
     //Creates a new game of texas holdem, you give them an arraylist of players and it uses their balances to play
@@ -33,8 +36,6 @@ public class TexasHoldem{
             hands.add(new DynamicHand());
             players.add(new Gambler(hands.get(i), 1000));
         }
-        int pool = 0;
-        int bettingRound = 0;
     }
 
     //Call for each game of Holdem
@@ -51,8 +52,27 @@ public class TexasHoldem{
                     dealHand();
                     showHand(0);
                     placeBets(input);
-                    showSpread();
                 }
+                if(bettingRound == 1){
+                    out.println("The Flop:");
+                    showSpread();
+                    showHand(0);
+                    placeBets(input);
+                }
+                if(bettingRound == 2){
+                    out.println("The River:");
+                    showSpread();
+                    showHand(0);
+                    placeBets(input);
+                }
+                if(bettingRound == 3){
+                    out.println("The Showdown:");
+                    showSpread();
+                    showHand(0);
+                    placeBets(input);
+                }
+                showResults();
+                resetGame();
             }
         }
         else if(line.indexOf("no") >= 0){
@@ -60,7 +80,42 @@ public class TexasHoldem{
         }
     }
 
-    
+    private void showResults(){
+        HashMap <DynamicHand, String> handsMap = new HashMap <DynamicHand, String>();
+
+        for(int i = 0; i < hands.size(); i++)
+            handsMap.put(hands.get(i), "");
+
+        for(Map.Entry <DynamicHand, String> entry: handsMap.entrySet()){
+            //Hands in order:
+            //Royal flush - straight & flush, 10-A
+            //Straight Flush - straight & flush
+            //Four of a kind - four of the same type of card
+            //Full house - a Pair and a Three of a Kind
+            //Flush - five cards with the same suit
+            //Straight - five cards in a row (A is 1 or 14)
+            //Three of a Kind - three of the same type of card
+            //Two pair - two pairs
+            //Pair - two of one type of card
+        }
+        
+        
+
+
+        //If there's a tie between any of the hands, check which has the highest card
+        //If still tied, check for suit of the highest card
+        //If still tied, repeat first check w/ 2nd highest card
+    }
+
+    private void resetGame(){
+        deck = new CardDeck(false);
+        spread = new CardDeck();
+        hands = new ArrayList <DynamicHand>();
+        bettingRound = 0;
+        pool = 0;
+    }
+
+
 
     //Gives each player two cards
     private void dealHand(){
@@ -75,22 +130,21 @@ public class TexasHoldem{
         for(int  i = 0; i < hands.get(player).getHandSize(); i++){
             out.print(" | " + hands.get(player).getCard(i).getCard() + " of " + hands.get(player).getCard(i).getSuit() + " | ");
         }
-        out.println();
+        out.println("\n");
     }
 
     private void showSpread(){
         if(bettingRound == 1){
             for(int i = 0; i < 3; i++)
                 spread.putCard((deck.drawCard(false)));
-
-            out.print("The flop:");
-            for(int i = 0; i < spread.getDeckSize(); i++)
-                out.print(" | " + spread.getCard(i).getCard() + " of " + spread.getCard(i).getSuit() + " | ");
-            out.println();
         }
         else if(bettingRound == 2 || bettingRound == 3){
             spread.putCard((deck.drawCard(false)));
-        }        
+        }
+
+        for(int i = 0; i < spread.getDeckSize(); i++)
+            out.print(" | " + spread.getCard(i).getCard() + " of " + spread.getCard(i).getSuit() + " | ");
+        out.println("\n");  
     }
 
 
@@ -115,18 +169,16 @@ public class TexasHoldem{
                         if(word.indexOf("check") >= 0){
                             bets[i] = 0;
                             placedBet = true;
-                            break outerwhile;
-                        }
-        
-                        else if(word.indexOf("fold") >= 0){
-                            bets[i] = -1;
-                            placedBet = true;
-                            break outerwhile;
+                            break;
                         }
                         
-                        //else if(word.indexOf("all in") >= 0){
-                        //    bets[i] = players[i].takeMoney(players[i].getBalance);
-                        //}
+                        else if(word.indexOf("fold") >= 0){
+                            bets[i] = 0;
+                            placedBet = true;
+                            players.remove(i);
+                            i--;
+                            break outerwhile;
+                        }
 
                         else if(Integer.parseInt(word) > 0){
                             double bet = Integer.parseInt(word);
@@ -145,22 +197,25 @@ public class TexasHoldem{
                     catch(Exception e){}
                 }
 
-                if(!placedBet){
-                    i--;
+                if(placedBet){
+                    out.println("You added $" + bets[i] + " to the pool.");
+                    placedBet = false;
+                    break;
+                }
+                else{
                     out.println("Please bet, check, or fold");
                     line = in.nextLine();
-                }
-                else
-                    out.println("You added $" + bets[i] + " to the pool.");
+                    lineScan = new Scanner(line);
+                }    
             }
-            placedBet = false;
         }
 
-        for(int i = 0; i < bets.length; i++){
-            if(bets[i] > 0)
-                pool += bets[i];
-        }
+        for(int i = 0; i < bets.length; i++)
+            pool += bets[i];
+        
         bettingRound ++;
             
     }
+
+
 }
