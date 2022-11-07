@@ -46,28 +46,28 @@ public class Blackjack {
     public void main()
     {
         
-        System.out.print("choice");
+        //System.out.print("choice");
 
         
     }
     private void knowRules() {
         String answer;
-        
-            do
-            {
-                
-            }
-            answer =prompt("Do you know how to play Blackjack? (y/n): ");
-            if(answer.equals("y"))
-            {
-                System.out.println("Great! Let us begin.");
+        answer =prompt("Do you know how to play Blackjack? (y/n): ");
+        if(answer.equals("y"))
+        {
+            System.out.println("Great! Let us begin.");
         
             
-            }
-            else if(answer.equals("n"))
-            {
-            
-            }
+        }
+        else if(answer.equals("n"))
+        {
+            System.out.println("RULES ARE A WIP");
+            prompt("Press any key to continue:");
+        }
+        else
+        {
+            knowRules();
+        }
         
         
     }
