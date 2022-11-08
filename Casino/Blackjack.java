@@ -24,6 +24,10 @@ public class Blackjack {
     {
         
         deck = new CardDeck(false);
+        for(int i = 0; i<100; i++)
+        {
+            deck.shuffle();
+        }
         player = player_;
         dealer = new Gambler(new DynamicHand(), 0);
         playerHand=player.getHand();
@@ -180,7 +184,7 @@ public class Blackjack {
             }
             if(cardTotal>21)
             {
-                System.out.println("Bust! Your hand was:\n" + playerHand.showHand(true) + "which totals >21!\nThe dealer had:\n" + dealerHand.showHand(true));
+                System.out.println("=====================================\n=====================================\nBust! Your hand was:\n" + playerHand.showHand(true) + "which totals >21!\nThe dealer had:\n" + dealerHand.showHand(true));
                 
                 System.out.println("You lost: $" + bet);
                 System.out.println("To play again, just type \"blackjack\"");
@@ -196,7 +200,98 @@ public class Blackjack {
         }
         else if(temp.equals("stand"))
         {
-           
+            
+            int dealerCardTotal=0;
+            int cardTotal=0;
+            for(int i = 0; i<playerHand.getHandSize(); i++)
+            {
+                int tempAdd;
+                Card c = playerHand.getCard(i);
+                if(c.getCard().equals("jack") 
+                || c.getCard().equals("queen")
+                || c.getCard().equals("king"))
+                {
+                    tempAdd=10;
+                }
+                else if(c.getCard().equals("ace"))
+                {
+                    tempAdd=1;
+                }
+                else
+                {
+                    tempAdd = Integer.parseInt(c.getCard());
+                }
+                cardTotal+=tempAdd;
+            }
+            for(int i = 0; i<dealerHand.getHandSize(); i++)
+            {
+                int tempAdd;
+                Card c = dealerHand.getCard(i);
+                if(c.getCard().equals("jack") 
+                || c.getCard().equals("queen")
+                || c.getCard().equals("king"))
+                {
+                    tempAdd=10;
+                }
+                else if(c.getCard().equals("ace"))
+                {
+                    tempAdd=1;
+                }
+                else
+                {
+                    tempAdd = Integer.parseInt(c.getCard());
+                }
+                dealerCardTotal+=tempAdd;
+            }
+            int counter = 0;
+            while(dealerCardTotal<=16)
+            {
+                counter++;
+                dealerHand.addCard(deck.drawCard(false));
+                for(int i = 0; i<dealerHand.getHandSize(); i++)
+                {
+                    int tempAdd;
+                    Card c = dealerHand.getCard(i);
+                    if(c.getCard().equals("jack") 
+                    || c.getCard().equals("queen")
+                    || c.getCard().equals("king"))
+                    {
+                        tempAdd=10;
+                    }
+                    else if(c.getCard().equals("ace"))
+                    {
+                        tempAdd=1;
+                    }
+                    else
+                    {
+                        tempAdd = Integer.parseInt(c.getCard());
+                    }
+                    dealerCardTotal+=tempAdd;
+                }
+
+            }
+            System.out.println("The dealer's hand is:\n" + dealerHand.showHand(false));
+            if(dealerCardTotal>21)
+            {
+                System.out.println("You win!");
+            }
+            else if(dealerCardTotal==21)
+            {
+                System.out.println("You lose!");
+            }
+            else if(dealerCardTotal>cardTotal)
+            {
+                System.out.println("You lose! by points!");
+            }
+            else if(dealerCardTotal<cardTotal)
+            {
+                System.out.println("You Win, by points");
+            }
+            else
+            {
+                System.out.println("Its a tie!!!");
+            }
+            end();
         }
         else
         {
