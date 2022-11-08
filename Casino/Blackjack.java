@@ -30,7 +30,7 @@ public class Blackjack {
         }
         player = player_;
         dealer = new Gambler(new DynamicHand(), 0);
-        playerHand=player.getHand();
+        playerHand=new DynamicHand();
         dealerHand=dealer.getHand();
         open = true;
     }
@@ -149,7 +149,7 @@ public class Blackjack {
         {
             System.out.println("Dealer hand: \n");
             System.out.println(dealerHand.showHand(false));
-            player.giveMoney(bet);
+            player.giveMoney(bet*2);
             System.out.println("You and the dealer both got a natural! To play again, simply enter \"blackjack\" again on the game select promp!");
             end();
         }
@@ -193,7 +193,7 @@ public class Blackjack {
             else if(cardTotal==21)
             {
                 System.out.println("You win! The dealers hand was:\n" + dealerHand.showHand(true) + "and yours was:\n" + playerHand.showHand(true));
-                player.giveMoney(bet);
+                player.giveMoney(bet*2);
                 System.out.println("You earned: $" + bet +" leaving you with a total balance of: $" + player.getBalance());
             }
 
@@ -273,18 +273,22 @@ public class Blackjack {
             System.out.println("The dealer's hand is:\n" + dealerHand.showHand(false));
             if(dealerCardTotal>21)
             {
+                player.giveMoney(bet*2);
                 System.out.println("You win!");
             }
             else if(dealerCardTotal==21)
             {
+                player.takeMoney(bet);
                 System.out.println("You lose!");
             }
             else if(dealerCardTotal>cardTotal)
             {
+                player.takeMoney(bet);
                 System.out.println("You lose! by points!");
             }
             else if(dealerCardTotal<cardTotal)
             {
+                player.giveMoney(bet*2);
                 System.out.println("You Win, by points");
             }
             else
@@ -411,6 +415,7 @@ public class Blackjack {
     public void end()
     {
         //input.close();
+        
         open = false;
     }
 }
