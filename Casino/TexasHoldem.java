@@ -126,7 +126,7 @@ public class TexasHoldem{
     }
 
     private void showHand(int player){
-        out.print("You have:");
+        out.println("You have:");
         for(int  i = 0; i < hands.get(player).getHandSize(); i++){
             out.print(" | " + hands.get(player).getCard(i).getCard() + " of " + hands.get(player).getCard(i).getSuit() + " | ");
         }
@@ -152,61 +152,69 @@ public class TexasHoldem{
         String line;
         double[] bets = new double[players.size()];
         double highest = 0;
-        boolean placedBet = false;
+        boolean hasPlacedBet = false;
+        double minimumBet = 0;
         for(int i = 0; i < players.size(); i++){
             out.println("What would you like to bet? The current bid is $" + highest);
-            out.println("(You can bet a number between one and your current balance, 'check', or 'fold'.");
-            
             line = in.nextLine();
             Scanner lineScan = new Scanner(line);
             
             //Checks for amount added to pool
             outerwhile:
-            while(!placedBet){
+            while(!hasPlacedBet){
                 while(lineScan.hasNext()){
                     String word = lineScan.next();
                     try{
+                        double bet = Integer.parseInt(word);
                         if(word.indexOf("check") >= 0){
                             bets[i] = 0;
-                            placedBet = true;
+                            hasPlacedBet = true;
                             break;
                         }
                         
                         else if(word.indexOf("fold") >= 0){
                             bets[i] = 0;
-                            placedBet = true;
+                            hasPlacedBet = true;
                             players.remove(i);
                             i--;
                             break outerwhile;
                         }
 
                         else if(Integer.parseInt(word) > 0){
-                            double bet = Integer.parseInt(word);
                             if(bet > players.get(i).getBalance()){
-                                out.println("You only have $" + players.get(i).getBalance() + ". Please bet a lower amount, check, or fold.");
+                                out.println("You only have $" + players.get(i).getBalance());
+                                line = in.nextLine();
+                                lineScan = new Scanner(line);
+                                break;
+                            }
+                            else if(bet < minimumBet){
+                                out.println("You have to bet at least $" + minimumBet);
                                 line = in.nextLine();
                                 lineScan = new Scanner(line);
                                 break;
                             }
                             bets[i] = bet;
                             players.get(i).takeMoney(bet);
-                            placedBet = true;
+                            hasPlacedBet = true;
+                            pool += bet;
+                            if(bet > minimumBet){
+                                minimumBet = bet;
+                            }
                             break;
                         }
                     }
                     catch(Exception e){}
                 }
 
-                if(placedBet){
-                    out.println("You added $" + bets[i] + " to the pool.");
-                    placedBet = false;
+                if(hasPlacedBet){
+                    hasPlacedBet = false;
                     break;
                 }
                 else{
                     out.println("Please bet, check, or fold");
                     line = in.nextLine();
                     lineScan = new Scanner(line);
-                }    
+                }
             }
         }
 
@@ -216,6 +224,8 @@ public class TexasHoldem{
         bettingRound ++;
             
     }
+
+    
 
 
 }
