@@ -57,5 +57,8 @@ public class Gambler{
         losses += numberOfLosses;
         balance -= moneyLost;
     }
+    public void setHand(DynamicHand newHand){
+        hand = newHand;
+    }
 
 }
