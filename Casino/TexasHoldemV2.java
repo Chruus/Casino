@@ -131,27 +131,34 @@ public class TexasHoldemV2{
     }
 
     private void placeBets(int player)
-    {
+    {//Takes bet of a certain player & adds it to the pool
+        System.out.println("The current bet is $" + minimumBet + ". Please bet, check, or fold.");
         String line = checkLine(player);//What the current player has typed
         int bet = numberIn(line);//Checks if number was in line, sets bet to that number
 
         
         if(line.indexOf("fold") >= 0)
-        {
+        {//Handles you folding (quitting)
             activePlayers.remove(player);
         }
 
         else if(line.indexOf("check") >= 0 || bet == 0)
-        {
+        {//Handles you checking (betting 0)
             if(minimumBet > 0)
             {//If anyone has bet before you, asks for you to bet again
                 System.out.println("You need to bet at least $" + minimumBet);
                 placeBets(player);
             }
         }
+        
+        else if(bet == -1)
+        {//Handles you not inputing anything useful
+            System.out.println("Please bet, check, or fold");
+            placeBets(player);
+        }
 
         else if(bet == minimumBet)
-        {
+        {//Handles you matching the minimum bet
             if(activePlayers.get(player).getBalance() >= bet)
             {//If you have enough money, adds it to pool
                 pool += bet;
@@ -166,7 +173,7 @@ public class TexasHoldemV2{
         }
 
         else if(bet > minimumBet)
-        {
+        {//Handles you raising the previous bet
             if(activePlayers.get(player).getBalance() >= bet)
             {//If you have enough money, adds it to pool + raises minimum bet
                 pool += bet; 
@@ -181,13 +188,8 @@ public class TexasHoldemV2{
                 placeBets(player);
             }
         }
-        else if(bet == -1)
-        {
-            System.out.println("Please bet, check, or fold");
-            placeBets(player);
-        }
         else if(bet < minimumBet)
-        {//Because someone has bet higher than you, asks for you to bet again
+        {//Handles you betting less than minimum
             System.out.println("You need to bet at least $" + minimumBet);
             placeBets(player);
         }
@@ -230,5 +232,14 @@ public class TexasHoldemV2{
             catch(Exception e){}
         }
         return -1;
+    }
+    private boolean checkStraight(int player)
+    {
+        DynamicHand hand = players.get(player).getHand();
+        for(int i = 0; i < 5; i++)
+        {
+            hand.addCard(spread.getCard(i));
+        }
+        
     }
 }
