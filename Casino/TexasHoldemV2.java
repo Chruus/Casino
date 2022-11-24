@@ -1,6 +1,5 @@
 import java.util.*;
 
-//Always have this called in the main class, add players to game, minimum of 2 players in game to start
 public class TexasHoldemV2{
     TexasHoldemV2(){
         players = new ArrayList <Gambler>();
@@ -19,9 +18,11 @@ public class TexasHoldemV2{
         players.add(player);
     }
 
-    public void play(){
+    public void play()
+    {//Plays one game each time it's called
         activePlayers = players;
-        if(players.size() > 1){//If there are enough players to play a round
+        if(players.size() > 1)
+        {//If there are enough players to play a round
             spread = new CardDeck();
             deck = new CardDeck(false);
             deck.shuffle();
@@ -86,13 +87,14 @@ public class TexasHoldemV2{
 
             }
         }
-        else{
+        else
+        {//Handles case where there's less than 2 players
             System.out.println("Waiting for players...");
         }
     }
     
     private void dealHands()
-    {
+    {//Gives each player 2 cards
         for(int player = 0; player < activePlayers.size(); player++)
         {
             DynamicHand newHand = new DynamicHand();
@@ -103,16 +105,16 @@ public class TexasHoldemV2{
     }
 
     private void showHand(int player)
-    {
+    {//Prints hand
         System.out.println("Your Hand:");
         System.out.println(" | " + players.get(player).getHand().getCard(0).getCardValueToString() + 
         " |  | " + players.get(player).getHand().getCard(1).getCardValueToString() + " | \n");
     }
 
     private void dealSpread(String position)
-    {
+    {//Adds cards to spread
         if(position.equals("flop"))
-        {//Adds cards to spread
+        {
             for(int i = 0; i < 3; i++)
                 spread.putCard(deck.drawCard(false));
         }
@@ -122,8 +124,7 @@ public class TexasHoldemV2{
     }
 
     private void showSpread(String position)
-    {
-        //Prints out spread
+    {//Prints out spread
         System.out.println("The " + position + ":");
         for(int i = 0; i < spread.getDeckSize(); i++)
             System.out.print(" | " + spread.getCardValue(i) + " | ");
@@ -208,7 +209,7 @@ public class TexasHoldemV2{
 
     
     private String checkLine(int player)
-    {
+    {//Takes line from player and checks it for commands, then returns line
         Scanner input = new Scanner(System.in);
         String line = input.nextLine();
         if(line.indexOf("exit") > 0)
@@ -219,7 +220,7 @@ public class TexasHoldemV2{
     }
 
     private int numberIn(String line)
-    {
+    {//Checks string to see if it has a number in it
         Scanner lineScan = new Scanner(line);
         int output;
         while(lineScan.hasNext())
@@ -232,14 +233,5 @@ public class TexasHoldemV2{
             catch(Exception e){}
         }
         return -1;
-    }
-    private boolean checkStraight(int player)
-    {
-        DynamicHand hand = players.get(player).getHand();
-        for(int i = 0; i < 5; i++)
-        {
-            hand.addCard(spread.getCard(i));
-        }
-        
     }
 }
