@@ -8,45 +8,93 @@ public class TexasHoldemV2{
     ArrayList <Gambler> players; //List of players in Texas Holdem
     ArrayList <Gambler> activePlayers; //List of players actively playing Texas Holdem
     CardDeck deck; //Deck cards are drawn from
+    CardDeck spread;
+    boolean minimumBetHasIncreased;
+    int playerWhoIncreasedMinimumBet;
+    int minimumBet;
+    int pool;
+
+    public void addPlayer(Gambler player)
+    {
+        players.add(player);
+    }
 
     public void play(){
+        activePlayers = players;
         if(players.size() > 1){//If there are enough players to play a round
+            spread = new CardDeck();
             deck = new CardDeck(false);
             deck.shuffle();
-            
-            int pool = 0;
+            minimumBet = 0;
+            pool = 0;
+            minimumBetHasIncreased = false;
+            playerWhoIncreasedMinimumBet = 0;
 
             //Giving players cards
             dealHands();
 
             //Pre-flop bets
-            for(int player = 0; player < players.size(); player++){
+            for(int player = 0; player < players.size(); player++)
+            {
+                System.out.println("\n\n\n\n\n\n\n\n");
                 showHand(player);
+                placeBets(player);
             }
-            pool += placeBets(pool);
+            minimumBet = playerWhoIncreasedMinimumBet = 0;
+            minimumBetHasIncreased = false;
 
 
             //Flop
-            showDeck("Flop");
-            showHand();
+            dealSpread("flop");
+            for(int player = 0; player < players.size(); player++)
+            {
+                System.out.println("\n\n\n\n\n\n\n\n");
+                showSpread("Flop");
+                showHand(player);
+                placeBets(player);
+            }
+            minimumBet = playerWhoIncreasedMinimumBet = 0;
+            minimumBetHasIncreased = false;
 
             //River
-            showDeck("River");
-            showHand();
+            dealSpread("river");
+            for(int player = 0; player < players.size(); player++)
+            {
+                System.out.println("\n\n\n\n\n\n\n\n");
+                showSpread("River");
+                showHand(player);
+                placeBets(player);
+            }
+            minimumBet = playerWhoIncreasedMinimumBet = 0;
+            minimumBetHasIncreased = false;
 
             //Showdown
-            showDeck("Showdown");
-            showHand();
+            dealSpread("showdown");
+            for(int player = 0; player < players.size(); player++)
+            {
+                System.out.println("\n\n\n\n\n\n\n\n");
+                showSpread("Showdown");
+                showHand(player);
+                placeBets(player);
+            }
+            minimumBet = playerWhoIncreasedMinimumBet = 0;
+            minimumBetHasIncreased = false;
             
             //Check who wins
-            for(int player = 0; player < players.size(); player++){
+            for(int player = 0; player < players.size(); player++)
+            {
 
             }
         }
+        else{
+            System.out.println("Waiting for players...");
+        }
     }
+    
     private void dealHands()
     {
-        for(int player = 0; player < activePlayers.size(); player++){
+        for(int player = 0; player < activePlayers.size(); player++)
+        {
             DynamicHand newHand = new DynamicHand();
             newHand.addCard(deck.drawCard(false));
             newHand.addCard(deck.drawCard(false));
@@ -54,29 +102,40 @@ public class TexasHoldemV2{
         }
     }
 
-    private void showHand()
+    private void showHand(int player)
     {
-        
+        System.out.println("Your Hand:");
+        System.out.println(" | " + players.get(player).getHand().getCard(0).getCardValueToString() + 
+        " |  | " + players.get(player).getHand().getCard(1).getCardValueToString() + " | \n");
     }
 
-    //Bug - cannot check for minimumBet, need to look into how to retrieve the data.
-    private int placeBets(int pool)
+    private void dealSpread(String position)
     {
-        int minimumBet = 0;
-        for(int player = 0; player < players.size(); player++){
-            pool += checkPlayerForBet(minimumBet, player);
+        if(position.equals("flop"))
+        {//Adds cards to spread
+            for(int i = 0; i < 3; i++)
+                spread.putCard(deck.drawCard(false));
         }
-        //if(raised)
-        //    pool += placeRaisedBets(playerThatRaised);
-        
-        return pool;
+        else if(position.equals("river") || position.equals("showdown")){
+            spread.putCard(deck.drawCard(false), true);
+        }
     }
 
-    private int checkPlayerForBet(int minimumBet, int player){
-        String line = checkLine(player);//What the current player has typed
-        int bet = numberInLine(line);//Checks if number was in line, sets bet to that number
-        int pool = 0;
+    private void showSpread(String position)
+    {
+        //Prints out spread
+        System.out.println("The " + position + ":");
+        for(int i = 0; i < spread.getDeckSize(); i++)
+            System.out.print(" | " + spread.getCardValue(i) + " | ");
+        System.out.println("\n");
+    }
 
+    private void placeBets(int player)
+    {
+        String line = checkLine(player);//What the current player has typed
+        int bet = numberIn(line);//Checks if number was in line, sets bet to that number
+
+        
         if(line.indexOf("fold") >= 0)
         {
             activePlayers.remove(player);
@@ -87,7 +146,7 @@ public class TexasHoldemV2{
             if(minimumBet > 0)
             {//If anyone has bet before you, asks for you to bet again
                 System.out.println("You need to bet at least $" + minimumBet);
-                checkPlayerForBet(minimumBet, player);
+                placeBets(player);
             }
         }
 
@@ -96,11 +155,12 @@ public class TexasHoldemV2{
             if(activePlayers.get(player).getBalance() >= bet)
             {//If you have enough money, adds it to pool
                 pool += bet;
+                activePlayers.get(player).takeMoney(bet);
             }
             else
             {//Asks for you to bet again because you do not have enough money
                 System.out.println("That exceedes your balance of $" + activePlayers.get(player).getBalance());
-                checkPlayerForBet(minimumBet, player);
+                placeBets(player);
             }
 
         }
@@ -111,44 +171,40 @@ public class TexasHoldemV2{
             {//If you have enough money, adds it to pool + raises minimum bet
                 pool += bet; 
                 minimumBet = bet;
+                minimumBetHasIncreased = true;
+                playerWhoIncreasedMinimumBet = player;
+                activePlayers.get(player).takeMoney(bet);
             }
             else
             {//Asks for you to bet again because you do not have enough money
                 System.out.println("That exceedes your balance of $" + activePlayers.get(player).getBalance());
-                checkPlayerForBet(minimumBet, player);
+                placeBets(player);
             }
         }
-
+        else if(bet == -1)
+        {
+            System.out.println("Please bet, check, or fold");
+            placeBets(player);
+        }
         else if(bet < minimumBet)
         {//Because someone has bet higher than you, asks for you to bet again
             System.out.println("You need to bet at least $" + minimumBet);
-            checkPlayerForBet(minimumBet, player);
+            placeBets(player);
         }
-
-        return pool;
     }
 
-    /*
-    private int placeRaisedBets(int playerThatRaised)
+    
+    private void placeRaisedBets()
     {
-        int pool = 0;
-        for(int player = 0; player < playerThatRaised; player++)
+        for(int player = 0; player < playerWhoIncreasedMinimumBet; player++)
         {
-            pool += checkPlayerForRaise(player);
+            System.out.println("The bet has been raised to $" + minimumBet + ". Would you like to match it?");
+            String line = checkLine(player);//What the current player has typed
+            
         }
-        return pool;
     }
 
-    private int checkPlayerForRaise(int player)
-    {
-        String line = checkLine(player);//What the current player has typed
-        int bet = numberInLine(line);//Checks if number was in line, sets bet to that number
-        int pool = 0;
-
-        //
-        return pool;
-    }
-    */
+    
     private String checkLine(int player)
     {
         Scanner input = new Scanner(System.in);
@@ -160,7 +216,7 @@ public class TexasHoldemV2{
         return line;
     }
 
-    private int numberInLine(String line)
+    private int numberIn(String line)
     {
         Scanner lineScan = new Scanner(line);
         int output;

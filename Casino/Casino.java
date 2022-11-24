@@ -13,9 +13,12 @@ public class Casino{
         
         String line = input.nextLine();
         double startingMoney = Double.parseDouble(line);
-        out.print("Enter which game you would like to play (blackjack) : ");
+        out.print("Enter which game you would like to play : ");
         Gambler bot = new Gambler(new DynamicHand(), startingMoney);
         UI ui = new UI(new Dice(6), new CardDeck(true));
+        TexasHoldemV2 texasHoldem = new TexasHoldemV2();
+        texasHoldem.addPlayer(bot);
+        texasHoldem.addPlayer(new Gambler(new DynamicHand(), 1500));
 
 
         while(!line.equals("exit")){
@@ -33,12 +36,14 @@ public class Casino{
                 
             }
 
-            else if(line.equals("texas holdem")){
-                ArrayList <Gambler> players = new ArrayList <Gambler>();
-                players.add(new Gambler(null, startingMoney));
-                TexasHoldem game = new TexasHoldem(1, 1500);
-                while(!line.equals("exit"))
-                    game.main();
+            else if(line.toLowerCase().equals("texas holdem"))
+            {
+                
+                do
+                {
+                    texasHoldem.play();
+                }
+                while(true);
             }
 
             else{
