@@ -107,8 +107,8 @@ public class TexasHoldemV2{
     private void showHand(int player)
     {//Prints hand
         System.out.println("Your Hand:");
-        System.out.println(" | " + players.get(player).getHand().getCard(0).getCardValueToString() + 
-        " |  | " + players.get(player).getHand().getCard(1).getCardValueToString() + " | \n");
+        System.out.println(" | " + players.get(player).getHand().getCard(0).toString() + 
+        " |  | " + players.get(player).getHand().getCard(1).toString() + " | \n");
     }
 
     private void dealSpread(String position)

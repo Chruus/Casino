@@ -51,10 +51,10 @@ public class Card{
     public String getCard(){
         return card;
     }
-    public String getCardValueToString(){
+    public String toString(){
         if(card.equals("joker"))
-            return "The card is a joker.";
-        return "The card is a " + getCard() + " of " + getSuit() + ".";
+            return "joker";
+        return getCard() + " of " + getSuit();
     }
 }
 

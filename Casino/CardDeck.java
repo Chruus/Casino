@@ -49,7 +49,7 @@ public class CardDeck{
         return deck.get(pos);
     }
     public String getCardValue(int pos){
-        return deck.get(pos).getCard() + " " + deck.get(pos).getSuit();
+        return deck.get(pos).toString();
     }
     public int getDeckSize(){
         return deck.size();

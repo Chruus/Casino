@@ -82,7 +82,7 @@ public class UI{
             else{
                 card = deck.drawCard(false);
             }
-            out.println(card.getCardValueToString());
+            out.println(card.toString());
         }
         
         //Shuffling Cards
