@@ -8,17 +8,19 @@ import java.net.*;
 public class Casino{
     public static void main(String[] args) throws IOException{
         Scanner input = new Scanner(System.in);
-        out.print("Hi, welcome to the casino! Please enter how much you would like in your account: ");
-        //out.println("Current commands:\n- Dice: roll, roll + number of times\n- Cards: draw card, draw random card, shuffle, put card\n- Misc: exit\n");
-        
+        out.println("Hi, welcome to the casino! Please enter:");
+        out.print(" your name: ");
+        String name = input.nextLine();
+        System.out.println(" starting balance:");
         String line = input.nextLine();
         double startingMoney = Double.parseDouble(line);
+
         out.print("Enter which game you would like to play : ");
-        Gambler bot = new Gambler(new DynamicHand(), startingMoney);
+        Gambler bot = new Gambler(new DynamicHand(), startingMoney, name);
         UI ui = new UI(new Dice(6), new CardDeck(true));
         TexasHoldemV2 texasHoldem = new TexasHoldemV2();
         texasHoldem.addPlayer(bot);
-        texasHoldem.addPlayer(new Gambler(new DynamicHand(), 1500));
+        texasHoldem.addPlayer(new Gambler(new DynamicHand(), 1500, "Bot 1"));
 
 
         while(!line.equals("exit")){

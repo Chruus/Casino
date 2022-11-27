@@ -43,6 +43,61 @@ public class Card{
         if(_suit == 4)
             suit = "spades";
     }
+
+    public double compareTo(Card inCard)
+    {
+        double thisCard, thisSuit, thatCard, thatSuit;
+        thisCard = thisSuit = thatCard = thatSuit = 0;
+        
+        try
+        {//Assigns number values for each card
+            thisCard = Integer.parseInt(card);
+            thatCard = Integer.parseInt(inCard.getCard());
+        }
+        catch(Exception e)
+        {
+            if(card.equals("ace"))
+                thisCard = 1;
+            else if(card.equals("jack"))
+                thisCard = 11;
+            else if(card.equals("queen"))
+                thisCard = 12;
+            else if(card.equals("king"))
+                thisCard = 13;
+            
+            if(inCard.getCard().equals("ace"))
+                thatCard = 1;
+            else if(inCard.getCard().equals("jack"))
+                thatCard = 11;
+            else if(inCard.getCard().equals("queen"))
+                thatCard = 12;
+            else if(inCard.getCard().equals("king"))
+                thatCard = 13;
+        }
+
+        //Assigns number values for each suit
+        if(suit.equals("spades"))
+            thisSuit = .4;
+        else if(suit.equals("hearts"))
+            thisSuit = .3;
+        else if(suit.equals("diamonds"))
+            thisSuit = .2;
+        else if(suit.equals("clubs"))
+            thisSuit = .1;
+
+        if(inCard.getSuit().equals("spades"))
+            thatSuit = .4;
+        else if(inCard.getSuit().equals("hearts"))
+            thatSuit = .3;
+        else if(inCard.getSuit().equals("diamonds"))
+            thatSuit = .2;
+        else if(inCard.getSuit().equals("clubs"))
+            thatSuit = .1;
+
+        //Compares the two and returns
+        return (thisCard + thisSuit) - (thatCard + thatSuit);
+
+    }
     
     //Getters
     public String getSuit(){

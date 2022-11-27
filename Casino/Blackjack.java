@@ -29,7 +29,7 @@ public class Blackjack {
             deck.shuffle();
         }
         player = player_;
-        dealer = new Gambler(new DynamicHand(), 0);
+        dealer = new Gambler(new DynamicHand(), 0, "dealer");
         playerHand=new DynamicHand();
         dealerHand=dealer.getHand();
         open = true;

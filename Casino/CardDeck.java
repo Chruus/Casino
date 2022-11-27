@@ -60,6 +60,10 @@ public class CardDeck{
         Collections.shuffle(deck);
         deckSize = deckSize + 0;
     }
+
+    public void sort(){
+        Collections.sort(deck, new deckSort());
+    }
     
     //If random, returns random card from the deck and removes it from the arraylist.
     //Else returns top card from deck and removes it from arraylist
@@ -72,7 +76,7 @@ public class CardDeck{
         deckSize--;
         return temp;
     }
-    
+
     //If bottom, puts a new card at the bottom of the deck, else puts one at the top
     public void putCard(Card newCard, boolean bottom){
         if(bottom)

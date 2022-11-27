@@ -82,10 +82,7 @@ public class TexasHoldemV2{
             minimumBetHasIncreased = false;
             
             //Check who wins
-            for(int player = 0; player < players.size(); player++)
-            {
-
-            }
+            whoWins();
         }
         else
         {//Handles case where there's less than 2 players
@@ -234,4 +231,26 @@ public class TexasHoldemV2{
         }
         return -1;
     }
+
+    private void whoWins()
+    {
+        HashMap <String, String> results = new HashMap <String, String>();
+        for(int player = 0; player < activePlayers.size(); player++)
+        {
+            boolean flush, straight, four, fullHouse, three, two;
+            flush = straight = four = fullHouse = three = two = false;
+            CardDeck playerSpreadDeck = spread;
+            playerSpreadDeck.putCard(players.get(player).getHand().getCard(0));
+            playerSpreadDeck.putCard(players.get(player).getHand().getCard(1));
+            playerSpreadDeck.sort();
+
+            CardDeck tempDeck = playerSpreadDeck;
+            for(int card = 0; card < playerSpreadDeck.getDeckSize(); player ++)
+            {
+                String cardValue = tempDeck.getCard(0).getCard();
+                tempDeck.
+            }
+        }
+    }
+
 }

@@ -3,12 +3,14 @@ public class Gambler{
     int wins;
     int losses;
     DynamicHand hand;
+    String name;
 
-    public Gambler(DynamicHand _hand, double startingMoney){
+    public Gambler(DynamicHand _hand, double startingMoney, String _name){
         hand = _hand;
         balance = startingMoney;
         wins = 0;
         losses = 0;
+        name = _name;
     }
 
     //Getters
@@ -23,6 +25,10 @@ public class Gambler{
     }
     public double getBalance(){
         return balance;
+    }
+    public String getName()
+    {
+        return name;
     }
     
     //Setters
