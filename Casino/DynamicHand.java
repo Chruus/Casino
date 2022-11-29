@@ -33,7 +33,7 @@ public class DynamicHand{
         return cards.size();
     }
     
-    public Card getCard(int index){
+    public Card get(int index){
         return cards.get(index);
     }
 

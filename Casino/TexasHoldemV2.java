@@ -104,8 +104,8 @@ public class TexasHoldemV2{
     private void showHand(int player)
     {//Prints hand
         System.out.println("Your Hand:");
-        System.out.println(" | " + players.get(player).getHand().getCard(0).toString() + 
-        " |  | " + players.get(player).getHand().getCard(1).toString() + " | \n");
+        System.out.println(" | " + players.get(player).getHand().get(0).toString() + 
+        " |  | " + players.get(player).getHand().get(1).toString() + " | \n");
     }
 
     private void dealSpread(String position)
@@ -124,7 +124,7 @@ public class TexasHoldemV2{
     {//Prints out spread
         System.out.println("The " + position + ":");
         for(int card = 0; card < spread.getDeckSize(); card++)
-            System.out.print(" | " + spread.getCard(card).getValue() + " | ");
+            System.out.print(" | " + spread.get(card).getValue() + " | ");
         System.out.println("\n");
     }
 
@@ -234,99 +234,149 @@ public class TexasHoldemV2{
 
     private void whoWins()
     {
+        //Variable declaration
+        HashMap <String, String> resultsLo = new HashMap <String, String>();
+        HashMap <String, String> resultsHi = new HashMap <String, String>();
         HashMap <String, String> results = new HashMap <String, String>();
-
+        
         for(int player = 0; player < activePlayers.size(); player++)
-        {//Goes through every active player, finds all their possible combinations, adds highest scoring combination to results HashMap
-            //Variable declaration & setup
+        {//Goes through every active player and adds their highest combination to results when ace is high and low
             String name = activePlayers.get(player).getName();
-            results.put(name, "");
-            String flush, straight, four, fullHouse, three, twoPair, pair;
-            flush = straight = four = fullHouse = three = twoPair = pair = "";
-            CardDeck playerSpreadDeck = spread;
-            playerSpreadDeck.putCard(players.get(player).getHand().getCard(0));
-            playerSpreadDeck.putCard(players.get(player).getHand().getCard(1));
-            playerSpreadDeck.sort();
-            CardDeck tempDeck;
-            HashMap <String, Integer> numberOfCardsAtValues = new HashMap <String, Integer>();
-            int counter, spades, hearts, diamonds, clubs;
-            counter = spades = hearts = diamonds = clubs = 0;
-
-            //Checks for straight
-            tempDeck = playerSpreadDeck;
-            for(int card = 0; card < playerSpreadDeck.getDeckSize(); player ++)
-            {   
-                if(tempDeck.getCard(card).getIntValue() + 1 == tempDeck.getCard(card).getIntValue())
-                    counter++;
-                else
-                    counter = 0;
-                if(counter >= 5)
-                    straight = tempDeck.getCard(card).getValue();
-            }
-
-            //Checks for flush
-            tempDeck = playerSpreadDeck;
-            for(int card = 0; card < tempDeck.getDeckSize(); card++)
-            {
-                String suit = tempDeck.getCard(card).getSuit();
-                if(suit.equals("spades"))
-                    spades++;
-                if(suit.equals("hearts"))
-                    hearts++;
-                if(suit.equals("diamonds"))
-                    diamonds++;
-                if(suit.equals("clubs"))
-                    clubs++;
-                
-                if(spades >= 5 || hearts >= 5 || diamonds >= 5 || clubs >= 5)
-                {
-                    flush = suit;
-                    break;
-                }
-            }
-
-            //Checks full house & four, three, and two of a kind
-            tempDeck = playerSpreadDeck;
-            for(int card = 0; card < tempDeck.getDeckSize(); card++)
-            {
-                String cardValue = tempDeck.getCard(card).getValue();
-                if(numberOfCardsAtValues.containsKey(cardValue))
-                    numberOfCardsAtValues.put(cardValue, numberOfCardsAtValues.get(cardValue) + 1);
-                else
-                    numberOfCardsAtValues.put(cardValue, 1);
-            }
-            for(Map.Entry <String, Integer> entry : numberOfCardsAtValues.entrySet())
-            {
-                if(entry.getValue() == 4)
-                    four = entry.getKey();
-                if(entry.getValue() == 3 && numberOfCardsAtValues.containsValue(2))
-                    fullHouse += "3: " + entry.getKey() + " ";
-                if(entry.getValue() == 2 && numberOfCardsAtValues.containsValue(3))
-                    fullHouse += "2: " + entry.getKey() + " ";
-                if(entry.getValue() == 3)
-                    three = entry.getKey();
-                if(entry.getValue() == 2)
-                    pair = entry.getKey();
-            }
-
-            //Assigns highest combination to player
-            if(!flush.equals("") && straight.equals("ace"))
-                results.put(name, "royalFlush");
-            else if(!flush.equals("") && !straight.equals(""))
-                results.put(name, "straightFlush");
-            else if(!four.equals(""))
-                results.put(name, "fourOAK");
-            else if(!fullHouse.equals(""))
-                results.put(name, "fullHouse");
-            else if(!flush.equals(""))
-                results.put(name, "flush");
-            else if(!straight.equals(""))
-                results.put(name, "straight");
-            else if(!three.equals(""))
-                results.put(name, "threeOAK");
-            else if(!pair.equals(""))
-                results.put(name, "pair");
+            resultsLo.put(name, getHighestCombination(player, false));
+            resultsHi.put(name, getHighestCombination(player, true));
         }
+        for(HashMap.Entry<String, String> entry : resultsHi.entrySet())
+        {//Determines whether the player has a higher combination
+            String key = entry.getKey();
+            int combinationHi = getCombinationValue(resultsHi.get(key));
+            int combinationLo = getCombinationValue(resultsLo.get(key));
+            if(combinationHi >= combinationLo)
+                results.put(key, resultsHi.get(key));
+            if(combinationHi < combinationLo)
+                results.put(key, resultsLo.get(key));
+        }
+        
+
     }
+
+
+
+    private int getCombinationValue(String combination)
+    {
+        if(combination.equals("royalFlush"))
+            return 8;
+        if(combination.equals("straightFlush"))
+            return 7;
+        if(combination.equals("fourOAK"))
+            return 6;
+        if(combination.equals("fullHouse"))
+            return 5;
+        if(combination.equals("flush"))
+            return 4;
+        if(combination.equals("straight"))
+            return 3;
+        if(combination.equals("threeOAK"))
+            return 2;
+        if(combination.equals("pair"))
+            return 1;
+        
+        return 0;
+    }
+
+    private String getHighestCombination(int player, boolean aceHigh)
+    {//Finds highest possible combination of cards for a player and returns it
+        
+        //Variable declaration & setup
+        String flush, straight, four, fullHouse, three, twoPair, pair;
+        flush = straight = four = fullHouse = three = twoPair = pair = "";
+        CardDeck playerSpreadDeck = spread;
+        playerSpreadDeck.putCard(players.get(player).getHand().get(0));
+        playerSpreadDeck.putCard(players.get(player).getHand().get(1));
+        playerSpreadDeck.sort(aceHigh);
+        CardDeck tempDeck;
+        HashMap <String, Integer> numberOfCardsAtValues = new HashMap <String, Integer>();
+        int counter, spades, hearts, diamonds, clubs;
+        counter = spades = hearts = diamonds = clubs = 0;
+
+        //Checks for straight
+        tempDeck = playerSpreadDeck;
+        for(int card = 0; card < playerSpreadDeck.getDeckSize() - 1; player ++)
+        {   
+            if(tempDeck.get(card).getIntValue(aceHigh) + 1 == tempDeck.get(card + 1).getIntValue(aceHigh))
+                counter++;
+            else
+                counter = 0;
+            if(counter >= 5)
+                straight = tempDeck.get(card).getValue();
+        }
+
+        //Checks for flush
+        tempDeck = playerSpreadDeck;
+        String suit = "";
+        for(int card = 0; card < tempDeck.getDeckSize(); card++)
+        {
+            suit = tempDeck.get(card).getSuit();
+            if(suit.equals("spades"))
+                spades++;
+            if(suit.equals("hearts"))
+                hearts++;
+            if(suit.equals("diamonds"))
+                diamonds++;
+            if(suit.equals("clubs"))
+                clubs++;
+            
+            if(spades >= 5 || hearts >= 5 || diamonds >= 5 || clubs >= 5)
+                flush = suit;
+        }
+        for(int card = 0; card < tempDeck.getDeckSize() && !flush.equals(""); card++)
+        {
+            if(deck.get(card).getSuit().equals(suit))
+                flush += " " + deck.get(card).getValue();
+        }
+
+        //Checks full house & four, three, and two of a kind
+        tempDeck = playerSpreadDeck;
+        for(int card = 0; card < tempDeck.getDeckSize(); card++)
+        {
+            String cardValue = tempDeck.get(card).getValue();
+            if(numberOfCardsAtValues.containsKey(cardValue))
+                numberOfCardsAtValues.put(cardValue, numberOfCardsAtValues.get(cardValue) + 1);
+            else
+                numberOfCardsAtValues.put(cardValue, 1);
+        }
+        for(Map.Entry <String, Integer> entry : numberOfCardsAtValues.entrySet())
+        {
+            if(entry.getValue() == 4)
+                four = entry.getKey();
+            if(entry.getValue() == 3 && numberOfCardsAtValues.containsValue(2))
+                fullHouse += "3: " + entry.getKey() + " ";
+            if(entry.getValue() == 2 && numberOfCardsAtValues.containsValue(3))
+                fullHouse += "2: " + entry.getKey() + " ";
+            if(entry.getValue() == 3)
+                three = entry.getKey();
+            if(entry.getValue() == 2)
+                pair = entry.getKey();
+        }
+
+        //Assigns highest combination to player
+        if(flush.indexOf("10 jack queen king ace") >= 0 && straight.equals("10 jack queen king ace"))
+            return "royalFlush";
+        else if(!flush.equals("") && !straight.equals(""))
+            return "straightFlush";
+        else if(!four.equals(""))
+            return "fourOAK";
+        else if(!fullHouse.equals(""))
+            return "fullHouse";
+        else if(!flush.equals(""))
+            return "flush";
+        else if(!straight.equals(""))
+            return "straight";
+        else if(!three.equals(""))
+            return "threeOAK";
+        else if(!pair.equals(""))
+            return "pair";
+
+        return "";
+    } 
 
 }

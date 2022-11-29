@@ -45,7 +45,7 @@ public class CardDeck{
     }
     
     //Getters
-    public Card getCard(int pos){
+    public Card get(int pos){
         return deck.get(pos);
     }
     public int getDeckSize()
@@ -79,8 +79,8 @@ public class CardDeck{
         deckSize = deckSize + 0;
     }
 
-    public void sort(){
-        Collections.sort(deck, new deckSort());
+    public void sort(boolean aceHigh){
+        Collections.sort(deck, new deckSort(aceHigh));
     }
     
     //If random, returns random card from the deck and removes it from the arraylist.

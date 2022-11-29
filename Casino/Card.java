@@ -70,9 +70,9 @@ public class Card{
             numberValue += .1;
     }
 
-    public double compareTo(Card inCard)
+    public double compareTo(Card inCard, boolean aceHigh)
     {   
-        return numberValue - inCard.getDoubleValue();
+        return numberValue - inCard.getDoubleValue(aceHigh);
     }
     
     //Getters
@@ -84,12 +84,16 @@ public class Card{
     {
         return value;
     }
-    public double getDoubleValue()
+    public double getDoubleValue(boolean aceHigh)
     {
+        if(aceHigh && value.equals("ace"))
+            numberValue += 13;
         return (double)numberValue;
     }
-    public int getIntValue()
+    public int getIntValue(boolean aceHigh)
     {
+        if(aceHigh && value.equals("ace"))
+            numberValue += 13;
         return (int)numberValue;
     }
     public String toString()

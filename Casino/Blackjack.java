@@ -84,65 +84,65 @@ public class Blackjack {
         System.out.println(playerHand.showHand(false));
         int val1;
         int val2;
-        if(playerHand.getCard(0).getValue().equals("jack") 
-        || playerHand.getCard(0).getValue().equals("queen")
-        || playerHand.getCard(0).getValue().equals("king"))
+        if(playerHand.get(0).getValue().equals("jack") 
+        || playerHand.get(0).getValue().equals("queen")
+        || playerHand.get(0).getValue().equals("king"))
         {
             val1=10;
         }
-        else if(playerHand.getCard(0).getValue().equals("ace"))
+        else if(playerHand.get(0).getValue().equals("ace"))
         {
             val1=1;
         }
         else
         {
-            val1 = Integer.parseInt(playerHand.getCard(0).getValue());
+            val1 = Integer.parseInt(playerHand.get(0).getValue());
         }
 
-        if(playerHand.getCard(1).getValue().equals("jack") 
-        || playerHand.getCard(1).getValue().equals("queen")
-        || playerHand.getCard(1).getValue().equals("king"))
+        if(playerHand.get(1).getValue().equals("jack") 
+        || playerHand.get(1).getValue().equals("queen")
+        || playerHand.get(1).getValue().equals("king"))
         {
             val2=10;
         }
-        else if(playerHand.getCard(1).getValue().equals("ace"))
+        else if(playerHand.get(1).getValue().equals("ace"))
         {
             val2=1;
         }
         else
         {
-            val2 = Integer.parseInt(playerHand.getCard(1).getValue());
+            val2 = Integer.parseInt(playerHand.get(1).getValue());
         }
 
         int dval1;
         int dval2;
-        if(dealerHand.getCard(0).getValue().equals("jack") 
-        || dealerHand.getCard(0).getValue().equals("queen")
-        || dealerHand.getCard(0).getValue().equals("king"))
+        if(dealerHand.get(0).getValue().equals("jack") 
+        || dealerHand.get(0).getValue().equals("queen")
+        || dealerHand.get(0).getValue().equals("king"))
         {
             dval1=10;
         }
-        else if(dealerHand.getCard(0).getValue().equals("ace"))
+        else if(dealerHand.get(0).getValue().equals("ace"))
         {
             dval1=1;
         }
         else
         {
-            dval1 = Integer.parseInt(dealerHand.getCard(0).getValue());
+            dval1 = Integer.parseInt(dealerHand.get(0).getValue());
         }
-        if(dealerHand.getCard(1).getValue().equals("jack") 
-        || dealerHand.getCard(1).getValue().equals("queen")
-        || dealerHand.getCard(1).getValue().equals("king"))
+        if(dealerHand.get(1).getValue().equals("jack") 
+        || dealerHand.get(1).getValue().equals("queen")
+        || dealerHand.get(1).getValue().equals("king"))
         {
             dval2=10;
         }
-        else if(dealerHand.getCard(1).getValue().equals("ace"))
+        else if(dealerHand.get(1).getValue().equals("ace"))
         {
             dval2=1;
         }
         else
         {
-            dval2 = Integer.parseInt(dealerHand.getCard(1).getValue());
+            dval2 = Integer.parseInt(dealerHand.get(1).getValue());
         }
 
         if((val1 + val2 == 21) && (dval1 + dval2==21))
@@ -165,7 +165,7 @@ public class Blackjack {
             for(int i = 0; i<playerHand.getHandSize(); i++)
             {
                 int tempAdd;
-                Card c = playerHand.getCard(i);
+                Card c = playerHand.get(i);
                 if(c.getValue().equals("jack") 
                 || c.getValue().equals("queen")
                 || c.getValue().equals("king"))
@@ -206,7 +206,7 @@ public class Blackjack {
             for(int i = 0; i<playerHand.getHandSize(); i++)
             {
                 int tempAdd;
-                Card c = playerHand.getCard(i);
+                Card c = playerHand.get(i);
                 if(c.getValue().equals("jack") 
                 || c.getValue().equals("queen")
                 || c.getValue().equals("king"))
@@ -226,7 +226,7 @@ public class Blackjack {
             for(int i = 0; i<dealerHand.getHandSize(); i++)
             {
                 int tempAdd;
-                Card c = dealerHand.getCard(i);
+                Card c = dealerHand.get(i);
                 if(c.getValue().equals("jack") 
                 || c.getValue().equals("queen")
                 || c.getValue().equals("king"))
@@ -251,7 +251,7 @@ public class Blackjack {
                 for(int i = 0; i<dealerHand.getHandSize(); i++)
                 {
                     int tempAdd;
-                    Card c = dealerHand.getCard(i);
+                    Card c = dealerHand.get(i);
                     if(c.getValue().equals("jack") 
                     || c.getValue().equals("queen")
                     || c.getValue().equals("king"))
