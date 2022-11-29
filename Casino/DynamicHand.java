@@ -21,7 +21,7 @@ public class DynamicHand{
     public boolean hasCard(Card cardCheck){
         for(Card c : cards)
         {
-            if(c.getCard() == cardCheck.getCard() && c.getSuit() == cardCheck.getSuit())
+            if(c.getValue() == cardCheck.getValue() && c.getSuit() == cardCheck.getSuit())
             {
                 return true;
             }
@@ -43,7 +43,7 @@ public class DynamicHand{
         
         cards.add(cardIn);
         
-        return "You added the " + cardIn.getCard() + " of " + cardIn.getSuit() + " to your hand. \n You now have " + cards.size() + " cards in your hand!";    
+        return "You added the " + cardIn.getValue() + " of " + cardIn.getSuit() + " to your hand. \n You now have " + cards.size() + " cards in your hand!";    
         
     }
     
@@ -51,7 +51,7 @@ public class DynamicHand{
     public Card replaceCard(Card cardIn, Card cardOut){
         for(Card c : cards)
         {
-            if(c.getCard() == cardOut.getCard() && c.getSuit() == cardOut.getSuit())
+            if(c.getValue() == cardOut.getValue() && c.getSuit() == cardOut.getSuit())
             {
                 cards.remove(c);
                 cards.add(cardIn);
@@ -67,7 +67,7 @@ public class DynamicHand{
       
         for(Card c : cards)
         {
-            if(c.getCard() == cardOut.getCard() && c.getSuit() == cardOut.getSuit())
+            if(c.getValue() == cardOut.getValue() && c.getSuit() == cardOut.getSuit())
             {
                 output=c;
                 cards.remove(c);
@@ -93,7 +93,7 @@ public class DynamicHand{
             }
             
             output += "Card: ";
-            output += temp.getCard();
+            output += temp.getValue();
             output += "\n";
             
 

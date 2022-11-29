@@ -4,14 +4,14 @@ public class TexasHoldemV2{
     TexasHoldemV2(){
         players = new ArrayList <Gambler>();
     }
-    ArrayList <Gambler> players; //List of players in Texas Holdem
-    ArrayList <Gambler> activePlayers; //List of players actively playing Texas Holdem
-    CardDeck deck; //Deck cards are drawn from
-    CardDeck spread;
-    boolean minimumBetHasIncreased;
-    int playerWhoIncreasedMinimumBet;
-    int minimumBet;
-    int pool;
+    private ArrayList <Gambler> players; //List of players in Texas Holdem
+    private ArrayList <Gambler> activePlayers; //List of players actively playing Texas Holdem
+    private CardDeck deck; //Deck cards are drawn from
+    private CardDeck spread;
+    private boolean minimumBetHasIncreased;
+    private int playerWhoIncreasedMinimumBet;
+    private int minimumBet;
+    private int pool;
 
     public void addPlayer(Gambler player)
     {
@@ -123,8 +123,8 @@ public class TexasHoldemV2{
     private void showSpread(String position)
     {//Prints out spread
         System.out.println("The " + position + ":");
-        for(int i = 0; i < spread.getDeckSize(); i++)
-            System.out.print(" | " + spread.getCardValue(i) + " | ");
+        for(int card = 0; card < spread.getDeckSize(); card++)
+            System.out.print(" | " + spread.getCard(card).getValue() + " | ");
         System.out.println("\n");
     }
 
@@ -235,21 +235,97 @@ public class TexasHoldemV2{
     private void whoWins()
     {
         HashMap <String, String> results = new HashMap <String, String>();
+
         for(int player = 0; player < activePlayers.size(); player++)
-        {
-            boolean flush, straight, four, fullHouse, three, two;
-            flush = straight = four = fullHouse = three = two = false;
+        {//Goes through every active player, finds all their possible combinations, adds highest scoring combination to results HashMap
+            //Variable declaration & setup
+            String name = activePlayers.get(player).getName();
+            results.put(name, "");
+            String flush, straight, four, fullHouse, three, twoPair, pair;
+            flush = straight = four = fullHouse = three = twoPair = pair = "";
             CardDeck playerSpreadDeck = spread;
             playerSpreadDeck.putCard(players.get(player).getHand().getCard(0));
             playerSpreadDeck.putCard(players.get(player).getHand().getCard(1));
             playerSpreadDeck.sort();
+            CardDeck tempDeck;
+            HashMap <String, Integer> numberOfCardsAtValues = new HashMap <String, Integer>();
+            int counter, spades, hearts, diamonds, clubs;
+            counter = spades = hearts = diamonds = clubs = 0;
 
-            CardDeck tempDeck = playerSpreadDeck;
+            //Checks for straight
+            tempDeck = playerSpreadDeck;
             for(int card = 0; card < playerSpreadDeck.getDeckSize(); player ++)
-            {
-                String cardValue = tempDeck.getCard(0).getCard();
-                tempDeck.
+            {   
+                if(tempDeck.getCard(card).getIntValue() + 1 == tempDeck.getCard(card).getIntValue())
+                    counter++;
+                else
+                    counter = 0;
+                if(counter >= 5)
+                    straight = tempDeck.getCard(card).getValue();
             }
+
+            //Checks for flush
+            tempDeck = playerSpreadDeck;
+            for(int card = 0; card < tempDeck.getDeckSize(); card++)
+            {
+                String suit = tempDeck.getCard(card).getSuit();
+                if(suit.equals("spades"))
+                    spades++;
+                if(suit.equals("hearts"))
+                    hearts++;
+                if(suit.equals("diamonds"))
+                    diamonds++;
+                if(suit.equals("clubs"))
+                    clubs++;
+                
+                if(spades >= 5 || hearts >= 5 || diamonds >= 5 || clubs >= 5)
+                {
+                    flush = suit;
+                    break;
+                }
+            }
+
+            //Checks full house & four, three, and two of a kind
+            tempDeck = playerSpreadDeck;
+            for(int card = 0; card < tempDeck.getDeckSize(); card++)
+            {
+                String cardValue = tempDeck.getCard(card).getValue();
+                if(numberOfCardsAtValues.containsKey(cardValue))
+                    numberOfCardsAtValues.put(cardValue, numberOfCardsAtValues.get(cardValue) + 1);
+                else
+                    numberOfCardsAtValues.put(cardValue, 1);
+            }
+            for(Map.Entry <String, Integer> entry : numberOfCardsAtValues.entrySet())
+            {
+                if(entry.getValue() == 4)
+                    four = entry.getKey();
+                if(entry.getValue() == 3 && numberOfCardsAtValues.containsValue(2))
+                    fullHouse += "3: " + entry.getKey() + " ";
+                if(entry.getValue() == 2 && numberOfCardsAtValues.containsValue(3))
+                    fullHouse += "2: " + entry.getKey() + " ";
+                if(entry.getValue() == 3)
+                    three = entry.getKey();
+                if(entry.getValue() == 2)
+                    pair = entry.getKey();
+            }
+
+            //Assigns highest combination to player
+            if(!flush.equals("") && straight.equals("ace"))
+                results.put(name, "royalFlush");
+            else if(!flush.equals("") && !straight.equals(""))
+                results.put(name, "straightFlush");
+            else if(!four.equals(""))
+                results.put(name, "fourOAK");
+            else if(!fullHouse.equals(""))
+                results.put(name, "fullHouse");
+            else if(!flush.equals(""))
+                results.put(name, "flush");
+            else if(!straight.equals(""))
+                results.put(name, "straight");
+            else if(!three.equals(""))
+                results.put(name, "threeOAK");
+            else if(!pair.equals(""))
+                results.put(name, "pair");
         }
     }
 

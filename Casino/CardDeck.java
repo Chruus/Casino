@@ -48,11 +48,29 @@ public class CardDeck{
     public Card getCard(int pos){
         return deck.get(pos);
     }
-    public String getCardValue(int pos){
-        return deck.get(pos).toString();
-    }
-    public int getDeckSize(){
+    public int getDeckSize()
+    {
         return deck.size();
+    }
+
+    public String getDeck()
+    {
+        String output = "";
+        for(int card = 0; card < deckSize; card++)
+        {
+            output += deck.get(card).getValue() + " " + deck.get(card).getSuit();
+        }
+        return output;
+    }
+
+    public String toString()
+    {
+        String output = "";
+        for(int card = 0; card < deckSize; card++)
+        {
+            output += " | "  + deck.get(card).toString() + " | ";
+        }
+        return output;
     }
     
     //Shuffles deck

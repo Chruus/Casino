@@ -35,14 +35,14 @@ public class StaticHand{
             }
         }
         if(space)
-            return "You added the " + cardIn.getCard() + " of " + cardIn.getSuit() + " to your hand.";    
-        return "You don't have space for the " + cardIn.getCard() + " of " + cardIn.getSuit() + " in your hand.";
+            return "You added the " + cardIn.getValue() + " of " + cardIn.getSuit() + " to your hand.";    
+        return "You don't have space for the " + cardIn.getValue() + " of " + cardIn.getSuit() + " in your hand.";
     }
     
     //Takes card from hand and replaces it with cardIn, then returns cardOut
     public Card replaceCard(Card cardIn, Card cardOut){
         for(int i = 0; i < cards.length; i++){
-            if(cards[i].getCard() == cardOut.getCard() && cards[i].getSuit() == cardOut.getSuit())
+            if(cards[i].getValue() == cardOut.getValue() && cards[i].getSuit() == cardOut.getSuit())
                 cards[i] = cardIn;
         }
         return cardOut;
@@ -52,7 +52,7 @@ public class StaticHand{
     public Card removeCard(Card cardOut){
         Card output = new Card("", "");
         for(int i = 0; i < cards.length; i++){
-            if(cards[i].getCard() == cardOut.getCard() && cards[i].getSuit() == cardOut.getSuit()){
+            if(cards[i].getValue() == cardOut.getValue() && cards[i].getSuit() == cardOut.getSuit()){
                 output = cards[i];
                 cards[i] = null;
             }
