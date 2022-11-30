@@ -11,36 +11,34 @@ public class Casino{
         out.println("Hi, welcome to the casino! Please enter:");
         out.print(" your name: ");
         String name = input.nextLine();
-        System.out.println(" starting balance:");
+        System.out.print(" starting balance:");
         String line = input.nextLine();
         double startingMoney = Double.parseDouble(line);
 
         out.print("Enter which game you would like to play : ");
-        Gambler bot = new Gambler(new DynamicHand(), startingMoney, name);
+        Gambler player = new Gambler(new DynamicHand(), startingMoney, name);
         UI ui = new UI(new Dice(6), new CardDeck(true));
         TexasHoldemV2 texasHoldem = new TexasHoldemV2();
-        texasHoldem.addPlayer(bot);
+        texasHoldem.addPlayer(player);
         texasHoldem.addPlayer(new Gambler(new DynamicHand(), 1500, "Bot 1"));
 
 
         while(!line.equals("exit")){
             if(line.equals("blackjack"))
             {
-                Blackjack game = new Blackjack(bot);
+                Blackjack game = new Blackjack(player);
                 
                 do
                 {
                     game.play();
                 }
                 while(game.isOpen());
-                bot.setMoney(game.getPlayerBalance());
+                player.setMoney(game.getPlayerBalance());
                 game=null;
-                
             }
 
             else if(line.toLowerCase().equals("texas holdem"))
             {
-                
                 do
                 {
                     texasHoldem.play();

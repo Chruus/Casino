@@ -3,11 +3,12 @@ import java.util.*;
 public class TexasHoldemV2{
     TexasHoldemV2(){
         players = new ArrayList <Gambler>();
+        activePlayers = new ArrayList <Gambler>();
     }
     private ArrayList <Gambler> players; //List of players in Texas Holdem
     private ArrayList <Gambler> activePlayers; //List of players actively playing Texas Holdem
     private CardDeck deck; //Deck cards are drawn from
-    private CardDeck spread;
+    private CardDeck spread; //Deck of up to 5 cards on the table
     private boolean minimumBetHasIncreased;
     private int playerWhoIncreasedMinimumBet;
     private int minimumBet;
@@ -20,8 +21,10 @@ public class TexasHoldemV2{
 
     public void play()
     {//Plays one game each time it's called
-        activePlayers = players;
-        if(players.size() > 1)
+        activePlayers.addAll(players);
+        players.clear();
+
+        if(activePlayers.size() > 1)
         {//If there are enough players to play a round
             spread = new CardDeck();
             deck = new CardDeck(false);
@@ -35,7 +38,7 @@ public class TexasHoldemV2{
             dealHands();
 
             //Pre-flop bets
-            for(int player = 0; player < players.size(); player++)
+            for(int player = 0; player < activePlayers.size(); player++)
             {
                 System.out.println("\n\n\n\n\n\n\n\n");
                 showHand(player);
@@ -47,7 +50,7 @@ public class TexasHoldemV2{
 
             //Flop
             dealSpread("flop");
-            for(int player = 0; player < players.size(); player++)
+            for(int player = 0; player < activePlayers.size(); player++)
             {
                 System.out.println("\n\n\n\n\n\n\n\n");
                 showSpread("Flop");
@@ -59,7 +62,7 @@ public class TexasHoldemV2{
 
             //River
             dealSpread("river");
-            for(int player = 0; player < players.size(); player++)
+            for(int player = 0; player < activePlayers.size(); player++)
             {
                 System.out.println("\n\n\n\n\n\n\n\n");
                 showSpread("River");
@@ -71,7 +74,7 @@ public class TexasHoldemV2{
 
             //Showdown
             dealSpread("showdown");
-            for(int player = 0; player < players.size(); player++)
+            for(int player = 0; player < activePlayers.size(); player++)
             {
                 System.out.println("\n\n\n\n\n\n\n\n");
                 showSpread("Showdown");
@@ -81,8 +84,20 @@ public class TexasHoldemV2{
             minimumBet = playerWhoIncreasedMinimumBet = 0;
             minimumBetHasIncreased = false;
             
-            //Check who wins
-            whoWins();
+            //Check who wins and gives them the money
+            String winner = whoWins();
+            System.out.println(winner + " wins $" + pool + "!");
+            for(int player = 0; activePlayers.size() > 0; player++)
+            {
+                if(activePlayers.get(player).getName().equals(winner))
+                {
+                    activePlayers.get(player).win(pool);
+                    pool = 0;
+                }
+                players.add(activePlayers.get(player));
+                activePlayers.remove(player);
+                player--;
+            }
         }
         else
         {//Handles case where there's less than 2 players
@@ -97,15 +112,15 @@ public class TexasHoldemV2{
             DynamicHand newHand = new DynamicHand();
             newHand.addCard(deck.drawCard(false));
             newHand.addCard(deck.drawCard(false));
-            players.get(player).setHand(newHand);
+            activePlayers.get(player).setHand(newHand);
         }
     }
 
     private void showHand(int player)
     {//Prints hand
         System.out.println("Your Hand:");
-        System.out.println(" | " + players.get(player).getHand().get(0).toString() + 
-        " |  | " + players.get(player).getHand().get(1).toString() + " | \n");
+        System.out.println(" | " + activePlayers.get(player).getHand().get(0).toString() + 
+        " |  | " + activePlayers.get(player).getHand().get(1).toString() + " | \n");
     }
 
     private void dealSpread(String position)
@@ -124,7 +139,7 @@ public class TexasHoldemV2{
     {//Prints out spread
         System.out.println("The " + position + ":");
         for(int card = 0; card < spread.getDeckSize(); card++)
-            System.out.print(" | " + spread.get(card).getValue() + " | ");
+            System.out.print(" | " + spread.get(card).toString() + " | ");
         System.out.println("\n");
     }
 
@@ -211,7 +226,7 @@ public class TexasHoldemV2{
         String line = input.nextLine();
         if(line.indexOf("exit") > 0)
         {
-            players.remove(player);
+            activePlayers.remove(player);
         }
         return line;
     }
@@ -232,12 +247,13 @@ public class TexasHoldemV2{
         return -1;
     }
 
-    private void whoWins()
+    private String whoWins()
     {
         //Variable declaration
         HashMap <String, String> resultsLo = new HashMap <String, String>();
         HashMap <String, String> resultsHi = new HashMap <String, String>();
         HashMap <String, String> results = new HashMap <String, String>();
+        HashMap <String, Double> resultsDoubleValue = new HashMap <String, Double>();
         
         for(int player = 0; player < activePlayers.size(); player++)
         {//Goes through every active player and adds their highest combination to results when ace is high and low
@@ -246,39 +262,68 @@ public class TexasHoldemV2{
             resultsHi.put(name, getHighestCombination(player, true));
         }
         for(HashMap.Entry<String, String> entry : resultsHi.entrySet())
-        {//Determines whether the player has a higher combination
+        {//Determines whether the player has a higher combination with ace as high or low
             String key = entry.getKey();
-            int combinationHi = getCombinationValue(resultsHi.get(key));
-            int combinationLo = getCombinationValue(resultsLo.get(key));
+            double combinationHi = getCombinationValue(resultsHi.get(key));
+            double combinationLo = getCombinationValue(resultsLo.get(key));
             if(combinationHi >= combinationLo)
                 results.put(key, resultsHi.get(key));
             if(combinationHi < combinationLo)
                 results.put(key, resultsLo.get(key));
         }
-        
 
+        for(HashMap.Entry<String, String> entry : results.entrySet())
+        {//Determines the numberical value of each player's hand to more easily compare them
+            double value = getCombinationValue(entry.getValue()) + getSuitValue(entry.getValue());
+            resultsDoubleValue.put(entry.getKey(), value);
+        }
+
+        String nameOfWinner = "";
+        double valueOfWinner = 0;
+        for(HashMap.Entry<String, Double> entry : resultsDoubleValue.entrySet())
+        {//Finds which player has the highest value and stores their name and their hand's value
+            if(entry.getValue() > valueOfWinner)
+            {
+                nameOfWinner = entry.getKey();
+                valueOfWinner = entry.getValue();
+            }
+        }
+
+        return nameOfWinner;
     }
 
-
-
-    private int getCombinationValue(String combination)
+    private double getCombinationValue(String combination)
     {
-        if(combination.equals("royalFlush"))
+        if(combination.indexOf("royalFlush") >= 0)
+            return 9;
+        if(combination.indexOf("straightFlush") >= 0)
             return 8;
-        if(combination.equals("straightFlush"))
+        if(combination.indexOf("fourOAK") >= 0)
             return 7;
-        if(combination.equals("fourOAK"))
+        if(combination.indexOf("fullHouse") >= 0)
             return 6;
-        if(combination.equals("fullHouse"))
+        if(combination.indexOf("flush") >= 0)
             return 5;
-        if(combination.equals("flush"))
+        if(combination.indexOf("straight") >= 0)
             return 4;
-        if(combination.equals("straight"))
+        if(combination.indexOf("threeOAK") >= 0)
             return 3;
-        if(combination.equals("threeOAK"))
-            return 2;
-        if(combination.equals("pair"))
+        if(combination.indexOf("pair") >= 0)
             return 1;
+        
+        return 0;
+    }
+
+    private double getSuitValue(String suit)
+    {
+        if(suit.indexOf("spades") >= 0)
+            return 0.4;
+        if(suit.indexOf("hearts") >= 0)
+            return 0.3;
+        if(suit.indexOf("diamonds") >= 0)
+            return 0.2;
+        if(suit.indexOf("clubs") >= 0)
+            return 0.1;
         
         return 0;
     }
@@ -290,8 +335,8 @@ public class TexasHoldemV2{
         String flush, straight, four, fullHouse, three, twoPair, pair;
         flush = straight = four = fullHouse = three = twoPair = pair = "";
         CardDeck playerSpreadDeck = spread;
-        playerSpreadDeck.putCard(players.get(player).getHand().get(0));
-        playerSpreadDeck.putCard(players.get(player).getHand().get(1));
+        playerSpreadDeck.putCard(activePlayers.get(player).getHand().get(0));
+        playerSpreadDeck.putCard(activePlayers.get(player).getHand().get(1));
         playerSpreadDeck.sort(aceHigh);
         CardDeck tempDeck;
         HashMap <String, Integer> numberOfCardsAtValues = new HashMap <String, Integer>();
@@ -326,7 +371,10 @@ public class TexasHoldemV2{
                 clubs++;
             
             if(spades >= 5 || hearts >= 5 || diamonds >= 5 || clubs >= 5)
+            {
                 flush = suit;
+                break;
+            }
         }
         for(int card = 0; card < tempDeck.getDeckSize() && !flush.equals(""); card++)
         {
@@ -360,23 +408,22 @@ public class TexasHoldemV2{
 
         //Assigns highest combination to player
         if(flush.indexOf("10 jack queen king ace") >= 0 && straight.equals("10 jack queen king ace"))
-            return "royalFlush";
+            return "royalFlush " + suit;
         else if(!flush.equals("") && !straight.equals(""))
-            return "straightFlush";
+            return "straightFlush " + suit;
         else if(!four.equals(""))
-            return "fourOAK";
+            return "fourOAK ";
         else if(!fullHouse.equals(""))
-            return "fullHouse";
+            return "fullHouse ";
         else if(!flush.equals(""))
-            return "flush";
+            return flush;
         else if(!straight.equals(""))
-            return "straight";
+            return straight;
         else if(!three.equals(""))
-            return "threeOAK";
+            return "threeOAK ";
         else if(!pair.equals(""))
-            return "pair";
+            return "pair ";
 
         return "";
-    } 
-
+    }
 }
