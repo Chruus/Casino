@@ -9,8 +9,6 @@ public class TexasHoldemV2{
     private ArrayList <Gambler> activePlayers; //List of players actively playing Texas Holdem
     private CardDeck deck; //Deck cards are drawn from
     private CardDeck spread; //Deck of up to 5 cards on the table
-    private boolean minimumBetHasIncreased;
-    private int playerWhoIncreasedMinimumBet;
     private int minimumBet;
     private int pool;
 
@@ -31,9 +29,6 @@ public class TexasHoldemV2{
             deck.shuffle();
             minimumBet = 0;
             pool = 0;
-            minimumBetHasIncreased = false;
-            playerWhoIncreasedMinimumBet = 0;
-
             //Giving players cards
             dealHands();
 
@@ -44,8 +39,6 @@ public class TexasHoldemV2{
                 showHand(player);
                 placeBets(player);
             }
-            minimumBet = playerWhoIncreasedMinimumBet = 0;
-            minimumBetHasIncreased = false;
 
 
             //Flop
@@ -57,8 +50,6 @@ public class TexasHoldemV2{
                 showHand(player);
                 placeBets(player);
             }
-            minimumBet = playerWhoIncreasedMinimumBet = 0;
-            minimumBetHasIncreased = false;
 
             //River
             dealSpread("river");
@@ -69,8 +60,6 @@ public class TexasHoldemV2{
                 showHand(player);
                 placeBets(player);
             }
-            minimumBet = playerWhoIncreasedMinimumBet = 0;
-            minimumBetHasIncreased = false;
 
             //Showdown
             dealSpread("showdown");
@@ -81,8 +70,6 @@ public class TexasHoldemV2{
                 showHand(player);
                 placeBets(player);
             }
-            minimumBet = playerWhoIncreasedMinimumBet = 0;
-            minimumBetHasIncreased = false;
             
             //Check who wins and gives them the money
             String winner = whoWins();
@@ -190,9 +177,6 @@ public class TexasHoldemV2{
             if(activePlayers.get(player).getBalance() >= bet)
             {//If you have enough money, adds it to pool + raises minimum bet
                 pool += bet; 
-                minimumBet = bet;
-                minimumBetHasIncreased = true;
-                playerWhoIncreasedMinimumBet = player;
                 activePlayers.get(player).takeMoney(bet);
             }
             else
@@ -207,18 +191,6 @@ public class TexasHoldemV2{
             placeBets(player);
         }
     }
-
-    
-    private void placeRaisedBets()
-    {
-        for(int player = 0; player < playerWhoIncreasedMinimumBet; player++)
-        {
-            System.out.println("The bet has been raised to $" + minimumBet + ". Would you like to match it?");
-            String line = checkLine(player);//What the current player has typed
-            
-        }
-    }
-
     
     private String checkLine(int player)
     {//Takes line from player and checks it for commands, then returns line
@@ -255,7 +227,7 @@ public class TexasHoldemV2{
         HashMap <String, String> results = new HashMap <String, String>();
         HashMap <String, Double> resultsDoubleValue = new HashMap <String, Double>();
         
-        for(int player = 0; player < activePlayers.size(); player++)
+        for(int player = 0; player < activePlayers.size(); player++)//Doesn't exit loop
         {//Goes through every active player and adds their highest combination to results when ace is high and low
             String name = activePlayers.get(player).getName();
             resultsLo.put(name, getHighestCombination(player, false));
@@ -342,10 +314,16 @@ public class TexasHoldemV2{
         HashMap <String, Integer> numberOfCardsAtValues = new HashMap <String, Integer>();
         int counter, spades, hearts, diamonds, clubs;
         counter = spades = hearts = diamonds = clubs = 0;
+        Card highCard;
+        if(activePlayers.get(player).getHand().get(0).compareTo(activePlayers.get(player).getHand().get(1), false) > 0)
+            highCard = activePlayers.get(player).getHand().get(0);
+        else
+            highCard = activePlayers.get(player).getHand().get(1);
 
         //Checks for straight
+        System.out.println("bozo");
         tempDeck = playerSpreadDeck;
-        for(int card = 0; card < playerSpreadDeck.getDeckSize() - 1; player ++)
+        for(int card = 0; card < playerSpreadDeck.getDeckSize() - 1; card ++)
         {   
             if(tempDeck.get(card).getIntValue(aceHigh) + 1 == tempDeck.get(card + 1).getIntValue(aceHigh))
                 counter++;
@@ -354,7 +332,6 @@ public class TexasHoldemV2{
             if(counter >= 5)
                 straight = tempDeck.get(card).getValue();
         }
-
         //Checks for flush
         tempDeck = playerSpreadDeck;
         String suit = "";
@@ -410,19 +387,21 @@ public class TexasHoldemV2{
         if(flush.indexOf("10 jack queen king ace") >= 0 && straight.equals("10 jack queen king ace"))
             return "royalFlush " + suit;
         else if(!flush.equals("") && !straight.equals(""))
-            return "straightFlush " + suit;
+            return straight + " " + flush;
         else if(!four.equals(""))
-            return "fourOAK ";
+            return four;
         else if(!fullHouse.equals(""))
-            return "fullHouse ";
+            return fullHouse;
         else if(!flush.equals(""))
             return flush;
         else if(!straight.equals(""))
             return straight;
         else if(!three.equals(""))
-            return "threeOAK ";
+            return three;
+        else if(!twoPair.equals(""))
+            return twoPair;
         else if(!pair.equals(""))
-            return "pair ";
+            return pair;
 
         return "";
     }
