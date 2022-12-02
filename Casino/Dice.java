@@ -1,9 +1,3 @@
-//Christopher Petty
-
-import static java.lang.System.out;
-import java.io.*;
-import java.util.*;
-
 public class Dice{
     private int faces;
     private int faceValue;

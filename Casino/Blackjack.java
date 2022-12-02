@@ -1,12 +1,5 @@
 import java.util.*;
 
-import javax.lang.model.util.ElementScanner6;
-
-import java.lang.*;
-import java.io.*;
-
-
-
 public class Blackjack {
     Gambler player;
     Gambler dealer;
@@ -243,10 +236,8 @@ public class Blackjack {
                 }
                 dealerCardTotal+=tempAdd;
             }
-            int counter = 0;
             while(dealerCardTotal<=16)
             {
-                counter++;
                 dealerHand.addCard(deck.drawCard(false));
                 for(int i = 0; i<dealerHand.getHandSize(); i++)
                 {

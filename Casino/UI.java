@@ -1,7 +1,6 @@
 //Christopher Petty
 
 import static java.lang.System.out;
-import java.io.*;
 import java.util.*;
 
 
@@ -51,6 +50,8 @@ public class UI{
                 }
                 catch (Exception e){}
             }
+            lineScan.close();
+
             //Rolls and prints however many times specified or once if not specified
             if(rollMoreThanOnce){
                 if(loopLength > 0){
@@ -123,6 +124,7 @@ public class UI{
                 if(!card.equals("") && !suit.equals(""))
                     break;
             }
+            lineScan.close();
             
             //Checks where to put card
             out.println("Do you want it on the bottom or somewhere in the middle?");
