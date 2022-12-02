@@ -78,10 +78,10 @@ public class UI{
         if(line.indexOf("draw") >= 0 && line.indexOf("card") >= 0){
             Card card;
             if(line.indexOf("random") >= 0){
-                card = deck.drawCard(true);
+                card = deck.drawCard();
             }
             else{
-                card = deck.drawCard(false);
+                card = deck.drawCard(0);
             }
             out.println(card.toString());
         }
