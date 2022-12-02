@@ -1,14 +1,14 @@
 //Christopher Petty
 
 public class Card{
-    private String value;
+    private String numeral;
     private String suit;
-    private double numberValue;
+    private double cardValue;
 
     //Allows cards to be made directly w/ strings
     Card(String _card, String _suit)
     {
-        value = _card;
+        numeral = _card;
         suit = _suit;
     }
     
@@ -16,20 +16,20 @@ public class Card{
     Card(int _card, int _suit)
     {
 
-        //Assigns value to card
+        //Assigns numeral to card
         if(_card <= 10 && _card != 1)
-            value = Integer.toString(_card);
+            numeral = Integer.toString(_card);
         else if(_card == 1)
-            value="ace";
+            numeral="ace";
         else if(_card == 11)
-            value = "jack";
+            numeral = "jack";
         else if(_card == 12)
-            value = "queen";
+            numeral = "queen";
         else if(_card == 13)
-            value = "king";
+            numeral = "king";
         else if(_card == 14)
         {
-            value = "joker";
+            numeral = "joker";
             suit = "NA";
         }
         
@@ -44,63 +44,57 @@ public class Card{
             suit = "spades";
 
         try
-        {//Assigns numberValue of the value
-            numberValue = Integer.parseInt(value);
+        {//Assigns cardValue of the numeral
+            cardValue = Integer.parseInt(numeral);
         }
         catch(Exception e)
         {
-            if(value.equals("ace"))
-                numberValue = 1;
-            else if(value.equals("jack"))
-                numberValue = 11;
-            else if(value.equals("queen"))
-                numberValue = 12;
-            else if(value.equals("king"))
-                numberValue = 13;
+            if(numeral.equals("ace"))
+                cardValue = 1;
+            else if(numeral.equals("jack"))
+                cardValue = 11;
+            else if(numeral.equals("queen"))
+                cardValue = 12;
+            else if(numeral.equals("king"))
+                cardValue = 13;
         }
 
-        //Assigns numberValue of the suit
+        //Assigns cardValue of the suit
         if(suit.equals("spades"))
-            numberValue += .4;
+            cardValue += .4;
         else if(suit.equals("hearts"))
-            numberValue += .3;
+            cardValue += .3;
         else if(suit.equals("diamonds"))
-            numberValue += .2;
+            cardValue += .2;
         else if(suit.equals("clubs"))
-            numberValue += .1;
-    }
-
-    public double compareTo(Card inCard, boolean aceHigh)
-    {   
-        return numberValue - inCard.getDoubleValue(aceHigh);
+            cardValue += .1;
     }
     
     //Getters
-    public String getSuit()
-    {
+    public String getSuit(){
         return suit;
     }
-    public String getValue()
-    {
-        return value;
+    public String getNumeral(){
+        return numeral;
     }
-    public double getDoubleValue(boolean aceHigh)
-    {
-        if(aceHigh && value.equals("ace"))
-            numberValue += 13;
-        return (double)numberValue;
+    public double getCardValue(boolean aceHigh){
+        if(aceHigh && numeral.equals("ace"))
+            cardValue += 13;
+        return cardValue;
     }
-    public int getIntValue(boolean aceHigh)
-    {
-        if(aceHigh && value.equals("ace"))
-            numberValue += 13;
-        return (int)numberValue;
+    public int getNumeralValue(boolean aceHigh){
+        if(aceHigh && numeral.equals("ace"))
+            cardValue += 13;
+        return (int)cardValue;
+    }
+    public double getSuitValue(){
+        return cardValue % 1;
     }
     public String toString()
     {
-        if(value.equals("joker"))
+        if(numeral.equals("joker"))
             return "joker";
-        return getValue() + " of " + getSuit();
+        return getNumeral() + " of " + getSuit();
     }
 }
 

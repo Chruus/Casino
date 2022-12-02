@@ -44,7 +44,7 @@ public class CardDeck{
     public Card get(int pos){
         return deck.get(pos);
     }
-    public int getDeckSize()
+    public int getSize()
     {
         return deck.size();
     }
@@ -54,7 +54,7 @@ public class CardDeck{
         String output = "";
         for(int card = 0; card < deckSize; card++)
         {
-            output += deck.get(card).getValue() + " " + deck.get(card).getSuit();
+            output += deck.get(card).getNumeral() + " " + deck.get(card).getSuit();
         }
         return output;
     }
@@ -75,28 +75,30 @@ public class CardDeck{
         deckSize = deckSize + 0;
     }
 
-    public void sort(boolean aceHigh){
-        Collections.sort(deck, new deckSort(aceHigh));
+    public void sort(boolean byNumeral, boolean bySuit, boolean aceHigh){
+        Collections.sort(deck, new CompareCards(byNumeral, bySuit, aceHigh));
     }
     
     //If random, returns random card from the deck and removes it from the arraylist.
     //Else returns top card from deck and removes it from arraylist
-    public Card drawCard(boolean random){
-        int pos = 0;
-        if(random)
-            pos = (int)(Math.random() * deckSize);
+    public Card drawCard(){
+        int pos = (int)(Math.random() * deckSize);
         Card temp = deck.get(pos);
         deck.remove(pos);
         deckSize--;
         return temp;
     }
 
+    public Card drawCard(int index){
+        Card temp = deck.get(index);
+        deck.remove(index);
+        deckSize--;
+        return temp;
+    }
+
     //If bottom, puts a new card at the bottom of the deck, else puts one at the top
-    public void putCard(Card newCard, boolean bottom){
-        if(bottom)
-            deck.add(deck.size() - 1, newCard);
-        else
-            deck.add(0, newCard);
+    public void putCard(Card newCard, int position){
+        deck.add(position, newCard);
     }
     
     //Puts a card at a random position in the deck

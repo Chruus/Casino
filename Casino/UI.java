@@ -131,7 +131,7 @@ public class UI{
             line = input.nextLine();
             line = line.toLowerCase();
             if(line.indexOf("bottom") >= 0){
-                deck.putCard(new Card(card, suit),true);
+                deck.putCard(new Card(card, suit), deck.getSize() - 1);
             }
             else if(line.indexOf("middle") >= 0){
                 deck.putCard(new Card(card, suit));
