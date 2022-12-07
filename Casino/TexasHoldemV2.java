@@ -192,8 +192,7 @@ public class TexasHoldemV2 {
         // Puts cards and spread into one deck
         for (int player = 0; player < activePlayers.size(); player++) {
             playerSpreadDecks.add(player, spread);
-            playerSpreadDecks.get(player).addCardDeck(activePlayers.get(0).getHand().toCardDeck());// adds player's hand
-                                                                                                   // twice
+            playerSpreadDecks.get(player).addCardDeck(activePlayers.get(player).getHand().toCardDeck());
             deckToName.put(playerSpreadDecks.get(player), activePlayers.get(player).getName());
         }
 

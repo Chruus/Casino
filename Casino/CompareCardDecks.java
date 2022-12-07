@@ -21,11 +21,12 @@ public class CompareCardDecks implements Comparator<CardDeck> {
         String thisDeckStr = getHighestValueHand(thisDeck);
         String thatDeckStr = getHighestValueHand(thatDeck);
         Scanner deckStrScan = new Scanner(thisDeckStr);
+        System.out.println(thisDeckStr + "\n" + thatDeckStr);
         String thisDeckStrName = deckStrScan.next();
         // deckStrScan.close();
         deckStrScan = new Scanner(thatDeckStr);
         String thatDeckStrName = deckStrScan.next();
-        // deckStrScan.close();
+        deckStrScan.close();
 
         if (getValueOfName(thisDeckStrName) > getValueOfName(thatDeckStrName))
             return 1;
