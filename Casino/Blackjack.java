@@ -1,10 +1,10 @@
 import java.util.*;
 
-public class Blackjack {
+public class Blackjack extends Game {
     Gambler player;
     Gambler dealer;
-    DynamicHand playerHand;
-    DynamicHand dealerHand;
+    CardHand playerHand;
+    CardHand dealerHand;
     CardDeck deck;
     int bet = 0;
     String choice;
@@ -20,8 +20,8 @@ public class Blackjack {
             deck.shuffle();
         }
         player = player_;
-        dealer = new Gambler(new DynamicHand(), 0, "dealer");
-        playerHand = new DynamicHand();
+        dealer = new Gambler(new CardHand(), 0, "dealer");
+        playerHand = new CardHand();
         dealerHand = dealer.getHand();
         open = true;
     }
@@ -54,12 +54,12 @@ public class Blackjack {
     private void giveCards() {
         deck.shuffle();
         // System.out.println(deck.getDeckSize());
-        playerHand.addCard(deck.drawCard());
-        playerHand.addCard(deck.drawCard());
-        dealerHand.addCard(deck.drawCard());
-        dealerHand.addCard(deck.drawCard());
+        playerHand.add(deck.drawCard());
+        playerHand.add(deck.drawCard());
+        dealerHand.add(deck.drawCard());
+        dealerHand.add(deck.drawCard());
         System.out.println("Here is your hand!: \n");
-        System.out.println(playerHand.showHand(false));
+        System.out.println(playerHand);
         int val1;
         int val2;
         if (playerHand.get(0).getNumeral().equals("jack")
@@ -105,7 +105,7 @@ public class Blackjack {
 
         if ((val1 + val2 == 21) && (dval1 + dval2 == 21)) {
             System.out.println("Dealer hand: \n");
-            System.out.println(dealerHand.showHand(false));
+            System.out.println(dealerHand);
             player.giveMoney(bet * 2);
             System.out.println(
                     "You and the dealer both got a natural! To play again, simply enter \"blackjack\" again on the game select promp!");
@@ -116,11 +116,11 @@ public class Blackjack {
     private void hitStand() {
         String temp = prompt("Make your choice (hit/stand): ");
         if (temp.equals("hit")) {
-            playerHand.addCard(deck.drawCard());
+            playerHand.add(deck.drawCard());
             System.out.println("Here is your hand!: \n");
-            System.out.println(playerHand.showHand(false));
+            System.out.println(playerHand);
             int cardTotal = 0;
-            for (int i = 0; i < playerHand.getHandSize(); i++) {
+            for (int i = 0; i < playerHand.getSize(); i++) {
                 int tempAdd;
                 Card c = playerHand.get(i);
                 if (c.getNumeral().equals("jack")
@@ -137,15 +137,15 @@ public class Blackjack {
             if (cardTotal > 21) {
                 System.out.println(
                         "=====================================\n=====================================\nBust! Your hand was:\n"
-                                + playerHand.showHand(true) + "which totals >21!\nThe dealer had:\n"
-                                + dealerHand.showHand(true));
+                                + playerHand + "which totals >21!\nThe dealer had:\n"
+                                + dealerHand);
 
                 System.out.println("You lost: $" + bet);
                 System.out.println("To play again, just type \"blackjack\"");
                 end();
             } else if (cardTotal == 21) {
-                System.out.println("You win! The dealers hand was:\n" + dealerHand.showHand(true) + "and yours was:\n"
-                        + playerHand.showHand(true));
+                System.out.println("You win! The dealers hand was:\n" + dealerHand + "and yours was:\n"
+                        + playerHand);
                 player.giveMoney(bet * 2);
                 System.out.println(
                         "You earned: $" + bet + " leaving you with a total balance of: $" + player.getBalance());
@@ -155,7 +155,7 @@ public class Blackjack {
 
             int dealerCardTotal = 0;
             int cardTotal = 0;
-            for (int i = 0; i < playerHand.getHandSize(); i++) {
+            for (int i = 0; i < playerHand.getSize(); i++) {
                 int tempAdd;
                 Card c = playerHand.get(i);
                 if (c.getNumeral().equals("jack")
@@ -169,7 +169,7 @@ public class Blackjack {
                 }
                 cardTotal += tempAdd;
             }
-            for (int i = 0; i < dealerHand.getHandSize(); i++) {
+            for (int i = 0; i < dealerHand.getSize(); i++) {
                 int tempAdd;
                 Card c = dealerHand.get(i);
                 if (c.getNumeral().equals("jack")
@@ -184,8 +184,8 @@ public class Blackjack {
                 dealerCardTotal += tempAdd;
             }
             while (dealerCardTotal <= 16) {
-                dealerHand.addCard(deck.drawCard());
-                for (int i = 0; i < dealerHand.getHandSize(); i++) {
+                dealerHand.add(deck.drawCard());
+                for (int i = 0; i < dealerHand.getSize(); i++) {
                     int tempAdd;
                     Card c = dealerHand.get(i);
                     if (c.getNumeral().equals("jack")
@@ -201,7 +201,7 @@ public class Blackjack {
                 }
 
             }
-            System.out.println("The dealer's hand is:\n" + dealerHand.showHand(false));
+            System.out.println("The dealer's hand is:\n" + dealerHand);
             if (dealerCardTotal > 21) {
                 player.giveMoney(bet * 2);
                 System.out.println("You win!");

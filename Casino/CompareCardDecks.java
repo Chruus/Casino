@@ -10,8 +10,10 @@ public class CompareCardDecks implements Comparator<CardDeck> {
 
     public int compare(CardDeck deck1, CardDeck deck2) {
         int result = 0;
+
         if (ruleset.equals("texas holdem"))
             result = texasHoldem(deck1, deck2);
+
         return result;
     }
 
@@ -20,13 +22,8 @@ public class CompareCardDecks implements Comparator<CardDeck> {
         // Gets the name (ie twoOAK or royalFlush) of each deck's value
         String thisDeckStr = getHighestValueHand(thisDeck);
         String thatDeckStr = getHighestValueHand(thatDeck);
-        Scanner deckStrScan = new Scanner(thisDeckStr);
-        System.out.println(thisDeckStr + "\n" + thatDeckStr);
-        String thisDeckStrName = deckStrScan.next();
-        // deckStrScan.close();
-        deckStrScan = new Scanner(thatDeckStr);
-        String thatDeckStrName = deckStrScan.next();
-        deckStrScan.close();
+        String thisDeckStrName = thisDeckStr.split(" ")[0];
+        String thatDeckStrName = thatDeckStr.split(" ")[0];
 
         if (getValueOfName(thisDeckStrName) > getValueOfName(thatDeckStrName))
             return 1;

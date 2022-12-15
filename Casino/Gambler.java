@@ -2,10 +2,10 @@ public class Gambler {
     double balance;
     int wins;
     int losses;
-    DynamicHand hand;
+    CardHand hand;
     String name;
 
-    public Gambler(DynamicHand _hand, double startingMoney, String _name) {
+    public Gambler(CardHand _hand, double startingMoney, String _name) {
         hand = _hand;
         balance = startingMoney;
         wins = 0;
@@ -13,8 +13,24 @@ public class Gambler {
         name = _name;
     }
 
+    public Gambler(double startingMoney, String _name) {
+        hand = new CardHand();
+        balance = startingMoney;
+        wins = 0;
+        losses = 0;
+        name = _name;
+    }
+
+    public Gambler(String _name) {
+        hand = new CardHand();
+        balance = 0;
+        wins = 0;
+        losses = 0;
+        name = _name;
+    }
+
     // Getters
-    public DynamicHand getHand() {
+    public CardHand getHand() {
         return hand;
     }
 
@@ -71,7 +87,7 @@ public class Gambler {
         balance -= moneyLost;
     }
 
-    public void setHand(DynamicHand newHand) {
+    public void setHand(CardHand newHand) {
         hand = newHand;
     }
 
