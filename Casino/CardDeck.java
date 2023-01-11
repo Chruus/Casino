@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class CardDeck {
-    ArrayList<Card> deck;
+    private ArrayList<Card> deck;
     private int deckSize;
 
     // Creates ArrayList of cards, 54 w/ 2 jokers if hasJoker is true, 52 w/o if
@@ -70,24 +70,25 @@ public class CardDeck {
 
     public void addCardDeck(CardDeck inDeck) {
         for (Card card : inDeck.getArrayList()) {
-            putCard(card);
+            add(card);
         }
     }
 
-    // Shuffles deck
+    // Setters
     public void shuffle() {
         Collections.shuffle(deck);
         deckSize = deckSize + 0;
+    }
+
+    public void clear() {
+        deck.clear();
     }
 
     public void sort(boolean byNumeral, boolean bySuit, boolean aceHigh) {
         Collections.sort(deck, new CompareCards(byNumeral, bySuit, aceHigh));
     }
 
-    // If random, returns random card from the deck and removes it from the
-    // arraylist.
-    // Else returns top card from deck and removes it from arraylist
-    public Card drawCard() {
+    public Card draw() {
         int pos = (int) (Math.random() * deckSize);
         Card temp = deck.get(pos);
         deck.remove(pos);
@@ -95,23 +96,19 @@ public class CardDeck {
         return temp;
     }
 
-    public Card drawCard(int index) {
+    public Card draw(int index) {
         Card temp = deck.get(index);
         deck.remove(index);
         deckSize--;
         return temp;
     }
 
-    // If bottom, puts a new card at the bottom of the deck, else puts one at the
-    // top
-    public void putCard(Card newCard, int position) {
+    public void add(Card newCard, int position) {
         deck.add(position, newCard);
     }
 
-    // Puts a card at a random position in the deck
-    public void putCard(Card newCard) {
-        int randomPos = (int) (Math.random() * deckSize);
-        deck.add(randomPos, newCard);
+    public void add(Card newCard) {
+        deck.add(0, newCard);
     }
 
 }

@@ -1,11 +1,30 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.*;
+
 public class Gambler {
     double balance;
     int wins;
     int losses;
-    CardHand hand;
+    CardDeck hand;
     String name;
+    Socket socket;
+    DataInputStream input;
+    DataOutputStream output;
 
-    public Gambler(CardHand _hand, double startingMoney, String _name) {
+    public Gambler(double startingMoney, String _name, Socket _socket) throws IOException {
+        hand = new CardDeck();
+        balance = startingMoney;
+        wins = 0;
+        losses = 0;
+        name = _name;
+        socket = _socket;
+        input = new DataInputStream(socket.getInputStream());
+        output = new DataOutputStream(socket.getOutputStream());
+    }
+
+    public Gambler(CardDeck _hand, double startingMoney, String _name) {
         hand = _hand;
         balance = startingMoney;
         wins = 0;
@@ -14,7 +33,7 @@ public class Gambler {
     }
 
     public Gambler(double startingMoney, String _name) {
-        hand = new CardHand();
+        hand = new CardDeck();
         balance = startingMoney;
         wins = 0;
         losses = 0;
@@ -22,7 +41,7 @@ public class Gambler {
     }
 
     public Gambler(String _name) {
-        hand = new CardHand();
+        hand = new CardDeck();
         balance = 0;
         wins = 0;
         losses = 0;
@@ -30,7 +49,7 @@ public class Gambler {
     }
 
     // Getters
-    public CardHand getHand() {
+    public CardDeck getHand() {
         return hand;
     }
 
@@ -48,6 +67,18 @@ public class Gambler {
 
     public String getName() {
         return name;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public DataInputStream getInputStream() {
+        return input;
+    }
+
+    public DataOutputStream getOutputStream() {
+        return output;
     }
 
     // Setters
@@ -87,7 +118,7 @@ public class Gambler {
         balance -= moneyLost;
     }
 
-    public void setHand(CardHand newHand) {
+    public void setHand(CardDeck newHand) {
         hand = newHand;
     }
 

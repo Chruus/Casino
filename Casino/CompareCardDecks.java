@@ -54,7 +54,7 @@ public class CompareCardDecks implements Comparator<CardDeck> {
         return 0;
     }
 
-    private String getHighestValueHand(CardDeck deck) {
+    public String getHighestValueHand(CardDeck deck) {
         String flushHi, flushLo, straight, fullHouse, four, three, twoPair, pair;
 
         // Stores basic types of combinations
@@ -66,6 +66,8 @@ public class CompareCardDecks implements Comparator<CardDeck> {
         three = hasThree(deck);
         twoPair = hasTwoPair(deck);
         pair = hasPair(deck);
+        System.out.println(four + " " + fullHouse + " " + flushHi + " " + flushLo + " " + straight + " " + three + " "
+                + twoPair + " " + pair);
 
         // Royal and Straight Flush
         // If there is a flush and a straight
@@ -137,7 +139,7 @@ public class CompareCardDecks implements Comparator<CardDeck> {
 
         for (int card = 0; card < deck.getSize(); card++) {
             if (deck.get(card).getNumeral().equals(threeNumeral))
-                deck.drawCard(card);
+                deck.draw(card);
         }
 
         String pair = hasPair(deck);
@@ -161,7 +163,7 @@ public class CompareCardDecks implements Comparator<CardDeck> {
 
         for (int card = 0; card < deck.getSize(); card++) {
             if (deck.get(card).getNumeral().equals(firstPair))
-                deck.drawCard(card);
+                deck.draw(card);
         }
 
         if (hasPair(deck).equals(""))
@@ -181,7 +183,7 @@ public class CompareCardDecks implements Comparator<CardDeck> {
 
         deck.sort(true, false, false);
         for (int card = 1; card < deck.getSize(); card++) {
-            if (counter == 3)
+            if (counter == 2)
                 return output;
             else if (deck.get(card).getNumeralValue(false) == deck.get(card - 1).getNumeralValue(false)) {
                 counter++;

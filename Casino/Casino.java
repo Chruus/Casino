@@ -6,20 +6,21 @@ import java.util.*;
 //Import java.net.*;
 
 public class Casino {
+    public static ArrayList<Gambler> players = new ArrayList<Gambler>();
+    public static ArrayList<Gambler> playersInQueue = new ArrayList<Gambler>();
+
     public static void main(String[] args) throws IOException {
         Scanner input = new Scanner(System.in);
-        out.println("Hi, welcome to the casino! Please enter: ");
-        out.print(" your name: ");
+        System.out.println("Hi, welcome to the casino! Please enter: ");
+        System.out.print(" your name: ");
         String name = input.nextLine();
         System.out.print(" starting balance: ");
         String line = input.nextLine();
         double startingMoney = Double.parseDouble(line);
 
-        out.print("Enter which game you would like to play: ");
-        Gambler player = new Gambler(new CardHand(), startingMoney, name);
+        System.out.print("Enter which game you would like to play: ");
+        Gambler player = new Gambler(new CardDeck(), startingMoney, name);
         TexasHoldem texasHoldem = new TexasHoldem();
-        texasHoldem.addPlayer(player);
-        texasHoldem.addPlayer(new Gambler(new CardHand(), 1500, "Bot 1"));
 
         while (!line.equals("exit")) {
             if (line.equals("blackjack")) {

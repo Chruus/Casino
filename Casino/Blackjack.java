@@ -1,10 +1,12 @@
+
+/* */
 import java.util.*;
 
 public class Blackjack extends Game {
     Gambler player;
     Gambler dealer;
-    CardHand playerHand;
-    CardHand dealerHand;
+    CardDeck playerHand;
+    CardDeck dealerHand;
     CardDeck deck;
     int bet = 0;
     String choice;
@@ -20,8 +22,8 @@ public class Blackjack extends Game {
             deck.shuffle();
         }
         player = player_;
-        dealer = new Gambler(new CardHand(), 0, "dealer");
-        playerHand = new CardHand();
+        dealer = new Gambler(new CardDeck(), 0, "dealer");
+        playerHand = new CardDeck();
         dealerHand = dealer.getHand();
         open = true;
     }
@@ -54,10 +56,10 @@ public class Blackjack extends Game {
     private void giveCards() {
         deck.shuffle();
         // System.out.println(deck.getDeckSize());
-        playerHand.add(deck.drawCard());
-        playerHand.add(deck.drawCard());
-        dealerHand.add(deck.drawCard());
-        dealerHand.add(deck.drawCard());
+        playerHand.add(deck.draw());
+        playerHand.add(deck.draw());
+        dealerHand.add(deck.draw());
+        dealerHand.add(deck.draw());
         System.out.println("Here is your hand!: \n");
         System.out.println(playerHand);
         int val1;
@@ -116,7 +118,7 @@ public class Blackjack extends Game {
     private void hitStand() {
         String temp = prompt("Make your choice (hit/stand): ");
         if (temp.equals("hit")) {
-            playerHand.add(deck.drawCard());
+            playerHand.add(deck.draw());
             System.out.println("Here is your hand!: \n");
             System.out.println(playerHand);
             int cardTotal = 0;
@@ -184,7 +186,7 @@ public class Blackjack extends Game {
                 dealerCardTotal += tempAdd;
             }
             while (dealerCardTotal <= 16) {
-                dealerHand.add(deck.drawCard());
+                dealerHand.add(deck.draw());
                 for (int i = 0; i < dealerHand.getSize(); i++) {
                     int tempAdd;
                     Card c = dealerHand.get(i);

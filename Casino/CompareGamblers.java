@@ -12,10 +12,10 @@ public class CompareGamblers implements Comparator<Gambler> {
             CompareCardDecks compareCardDecks = new CompareCardDecks("texas holdem");
             CardDeck thisDeck, thatDeck;
             thisDeck = thatDeck = new CardDeck();
-            thisDeck.putCard(thisPlayer.getHand().get(0));
-            thisDeck.putCard(thisPlayer.getHand().get(1));
-            thatDeck.putCard(thisPlayer.getHand().get(0));
-            thatDeck.putCard(thisPlayer.getHand().get(1));
+            thisDeck.add(thisPlayer.getHand().get(0));
+            thisDeck.add(thisPlayer.getHand().get(1));
+            thatDeck.add(thisPlayer.getHand().get(0));
+            thatDeck.add(thisPlayer.getHand().get(1));
 
             return compareCardDecks.compare(thisDeck, thatDeck);
         }

@@ -2,12 +2,9 @@ import java.util.*;
 
 public class TexasHoldem extends Game {
     TexasHoldem() {
-        players = new ArrayList<Gambler>();
-        activePlayers = new ArrayList<Gambler>();
         minimumNumberOfPlayers = 2;
     }
 
-    private ArrayList<Gambler> players; // List of players in Texas Holdem
     private ArrayList<Gambler> activePlayers; // List of players actively playing Texas Holdem
     private CardDeck deck; // Deck cards are drawn from
     private CardDeck spread; // Deck of up to 5 cards on the table
@@ -15,14 +12,9 @@ public class TexasHoldem extends Game {
     private int pool;
     private int minimumNumberOfPlayers;
 
-    public void addPlayer(Gambler player) {
-        players.add(player);
-    }
-
     public void play() {// Plays Texas Holdem until there aren't enough players
         while (enoughPlayers()) {
-            activePlayers.addAll(players);
-            players.clear();
+            activePlayers = Casino.players;
             spread = new CardDeck();
             deck = new CardDeck(false);
             deck.shuffle();
@@ -74,7 +66,6 @@ public class TexasHoldem extends Game {
                     activePlayers.get(player).win(pool);
                     pool = 0;
                 }
-                players.add(activePlayers.get(player));
                 activePlayers.remove(player);
                 player--;
             }
@@ -82,17 +73,17 @@ public class TexasHoldem extends Game {
     }
 
     private boolean enoughPlayers() {
-        if (players.size() < minimumNumberOfPlayers)
+        if (Casino.players.size() < minimumNumberOfPlayers)
             return false;
         return true;
     }
 
     private void dealHands() {// Gives each player 2 cards
         for (int player = 0; player < activePlayers.size(); player++) {
-            CardHand newHand = new CardHand();
-            newHand.add(deck.drawCard());
-            newHand.add(deck.drawCard());
-            activePlayers.get(player).setHand(newHand);
+            CardDeck hand = new CardDeck();
+            hand.add(deck.draw());
+            hand.add(deck.draw());
+            activePlayers.get(player).setHand(hand);
         }
     }
 
@@ -105,9 +96,9 @@ public class TexasHoldem extends Game {
     private void dealSpread(String position) {// Adds cards to spread
         if (position.equals("flop")) {
             for (int i = 0; i < 3; i++)
-                spread.putCard(deck.drawCard());
+                spread.add(deck.draw());
         } else if (position.equals("river") || position.equals("showdown")) {
-            spread.putCard(deck.drawCard(), spread.getSize() - 1);
+            spread.add(deck.draw(), spread.getSize() - 1);
         }
     }
 
@@ -190,31 +181,21 @@ public class TexasHoldem extends Game {
     }
 
     private String whoWins() {
-        ArrayList<CardDeck> playerSpreadDecks = new ArrayList<CardDeck>();
-        CompareCardDecks compareCardDecks = new CompareCardDecks("texas holdem");
-        CompareCards compareCards = new CompareCards(true, true, true);
+        ArrayList<CardDeck> playerDecks = new ArrayList<CardDeck>();
         HashMap<CardDeck, String> deckToName = new HashMap<CardDeck, String>();
 
         // Puts cards and spread into one deck
-        for (int player = 0; player < activePlayers.size(); player++) {// Incorrectly sets up playerSpreadDecks
-            playerSpreadDecks.add(player, spread);
-            playerSpreadDecks.get(player).addCardDeck(activePlayers.get(player).getHand().toCardDeck());
-            deckToName.put(playerSpreadDecks.get(player), activePlayers.get(player).getName());
+        for (int player = 0; player < activePlayers.size(); player++) {// Incorrectly sets up playerDecks
+            CardDeck temp = spread;
+            playerDecks.add(player, new CardDeck());
+            playerDecks.get(player).addCardDeck(activePlayers.get(player).getHand());
         }
 
-        System.out.println(playerSpreadDecks.get(0) + "\n" + playerSpreadDecks.get(1));
-        Collections.sort(playerSpreadDecks, new CompareCardDecks("texas holdem"));
+        // System.out.println(playerDecks);
+        Collections.sort(playerDecks, new CompareCardDecks("texas holdem"));
 
-        // Need to check for ties
+        System.out.println("a " + new CompareCardDecks("texas holdem").getHighestValueHand(playerDecks.get(0)));
 
-        return deckToName.get(playerSpreadDecks.get(0));
-    }
-
-    private Gambler getPlayer(String name) {
-        for (Gambler player : activePlayers) {
-            if (player.getName().equals(name))
-                return player;
-        }
-        return null;
+        return deckToName.get(playerDecks.get(0));
     }
 }
