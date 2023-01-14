@@ -1,13 +1,13 @@
 import java.util.Comparator;
 
-public class CompareGamblers implements Comparator<Gambler> {
+public class CompareGamblers implements Comparator<Player> {
     String ruleset;
 
     public CompareGamblers(String _ruleset) {
         ruleset = _ruleset;
     }
 
-    public int compare(Gambler thisPlayer, Gambler thatPlayer) {
+    public int compare(Player thisPlayer, Player thatPlayer) {
         if (ruleset.equals("texas holdem")) {
             CompareCardDecks compareCardDecks = new CompareCardDecks("texas holdem");
             CardDeck thisDeck, thatDeck;

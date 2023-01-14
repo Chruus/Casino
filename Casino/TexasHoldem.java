@@ -5,7 +5,7 @@ public class TexasHoldem extends Game {
         minimumNumberOfPlayers = 2;
     }
 
-    private ArrayList<Gambler> activePlayers; // List of players actively playing Texas Holdem
+    private ArrayList<Player> activePlayers; // List of players actively playing Texas Holdem
     private CardDeck deck; // Deck cards are drawn from
     private CardDeck spread; // Deck of up to 5 cards on the table
     private int minimumBet;
@@ -25,35 +25,35 @@ public class TexasHoldem extends Game {
             dealHands();
 
             // Pre-flop bets
-            for (int player = 0; player < activePlayers.size(); player++) {
-                System.out.println("\n\n\n\n\n\n\n\n");
+            for (Player player : activePlayers) {
+                player.sendOutput("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                 showHand(player);
                 placeBets(player);
             }
 
             // Flop
             dealSpread("flop");
-            for (int player = 0; player < activePlayers.size(); player++) {
-                System.out.println("\n\n\n\n\n\n\n\n");
-                showSpread("Flop");
+            for (Player player : activePlayers) {
+                player.sendOutput("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                showSpread(player, "Flop");
                 showHand(player);
                 placeBets(player);
             }
 
             // River
             dealSpread("river");
-            for (int player = 0; player < activePlayers.size(); player++) {
-                System.out.println("\n\n\n\n\n\n\n\n");
-                showSpread("River");
+            for (Player player : activePlayers) {
+                player.sendOutput("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                showSpread(player, "River");
                 showHand(player);
                 placeBets(player);
             }
 
             // Showdown
             dealSpread("showdown");
-            for (int player = 0; player < activePlayers.size(); player++) {
-                System.out.println("\n\n\n\n\n\n\n\n");
-                showSpread("Showdown");
+            for (Player player : activePlayers) {
+                player.sendOutput("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                showSpread(player, "showdown");
                 showHand(player);
                 placeBets(player);
             }
@@ -63,7 +63,6 @@ public class TexasHoldem extends Game {
             System.out.println(winner + " wins $" + pool + "!");
             for (int player = 0; activePlayers.size() > 0; player++) {
                 if (activePlayers.get(player).getName().equals(winner)) {
-                    activePlayers.get(player).win(pool);
                     pool = 0;
                 }
                 activePlayers.remove(player);
@@ -87,12 +86,6 @@ public class TexasHoldem extends Game {
         }
     }
 
-    private void showHand(int player) {// Prints hand
-        System.out.println("Your Hand:");
-        System.out.println(" | " + activePlayers.get(player).getHand().get(0) +
-                " |  | " + activePlayers.get(player).getHand().get(1) + " | \n");
-    }
-
     private void dealSpread(String position) {// Adds cards to spread
         if (position.equals("flop")) {
             for (int i = 0; i < 3; i++)
@@ -102,65 +95,67 @@ public class TexasHoldem extends Game {
         }
     }
 
-    private void showSpread(String position) {// Prints out spread
-        System.out.println("The " + position + ":");
-        for (int card = 0; card < spread.getSize(); card++)
-            System.out.print(" | " + spread.get(card).toString() + " | ");
-        System.out.println("\n");
+    private void showHand(Player player) {// Prints hand
+        String output = "Your Hand:\n" + player.getHand() + "\n";
+        player.sendOutput(output);
     }
 
-    private void placeBets(int player) {// Takes bet of a certain player & adds it to the pool
-        System.out.println("The current bet is $" + minimumBet + ". Please bet, check, or fold.");
-        String line = checkLine(player);
+    private void showSpread(Player player, String position) {// Prints out spread
+        String output = "\nThe " + position + ": \n" + spread + "\n";
+        player.sendOutput(output);
+    }
+
+    private void placeBets(Player player) {// Takes bet of a certain player & adds it to the pool
+        player.sendOutput("\nThe current bet is $" + minimumBet + ". Please bet, check, or fold.\n");
+        String line = getInput(player);
         int bet = numberIn(line);
 
         if (line.indexOf("fold") >= 0) {// Handles you folding (quitting)
-            activePlayers.get(player).getHand().clear();
+            player.getHand().clear();
         }
 
         else if (line.indexOf("check") >= 0 || bet == 0) {// Handles you checking (betting 0)
             if (minimumBet > 0) {// If anyone has bet before you, asks for you to bet again
-                System.out.println("You need to bet at least $" + minimumBet);
+                player.sendOutput("\nYou need to bet at least $" + minimumBet + "\n");
                 placeBets(player);
             }
         }
 
         else if (bet == -1) {// Handles you not inputing anything useful
-            System.out.println("Please bet, check, or fold");
+            player.sendOutput("\nPlease bet, check, or fold\n");
             placeBets(player);
         }
 
         else if (bet == minimumBet) {// Handles you matching the minimum bet
-            if (activePlayers.get(player).getBalance() >= bet) {// If you have enough money, adds it to pool
+            if (player.getBalance() >= bet) {// If you have enough money, adds it to pool
                 pool += bet;
-                activePlayers.get(player).takeMoney(bet);
+                player.takeMoney(bet);
             } else {// Asks for you to bet again because you do not have enough money
-                System.out.println("That exceedes your balance of $" + activePlayers.get(player).getBalance());
+                player.sendOutput("\nThat exceedes your balance of $" + player.getBalance() + "\n");
                 placeBets(player);
             }
 
         }
 
         else if (bet > minimumBet) {// Handles you raising the previous bet
-            if (activePlayers.get(player).getBalance() >= bet) {// If you have enough money, adds it to pool + raises
-                                                                // minimum bet
+            if (player.getBalance() >= bet) {// If you have enough money, adds it to pool + raises minimum bet
                 pool += bet;
-                activePlayers.get(player).takeMoney(bet);
+                player.takeMoney(bet);
             } else {// Asks for you to bet again because you do not have enough money
-                System.out.println("That exceedes your balance of $" + activePlayers.get(player).getBalance());
+                player.sendOutput("\nThat exceedes your balance of $" + player.getBalance() + "\n");
                 placeBets(player);
             }
         } else if (bet < minimumBet) {// Handles you betting less than minimum
-            System.out.println("You need to bet at least $" + minimumBet);
+            player.sendOutput("\nYou need to bet at least $" + minimumBet + "\n");
             placeBets(player);
         }
     }
 
-    private String checkLine(int player) {// Takes line from player and checks it for commands, then returns line
-        Scanner input = new Scanner(System.in);
-        String line = input.nextLine();
-        if (line.indexOf("exit") > 0) {
+    private String getInput(Player player) {// Takes line from player and checks it for commands, then returns line
+        String line = player.getInput();
+        if (line.toLowerCase().equals("exit") || line.equals("Player Has Disconnected")) {
             activePlayers.remove(player);
+            return "";
         }
         return line;
     }

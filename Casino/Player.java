@@ -1,9 +1,7 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 
-public class Gambler {
+public class Player {
     double balance;
     int wins;
     int losses;
@@ -13,18 +11,21 @@ public class Gambler {
     DataInputStream input;
     DataOutputStream output;
 
-    public Gambler(double startingMoney, String _name, Socket _socket) throws IOException {
+    public Player(double startingMoney, String _name, Socket _socket) {
         hand = new CardDeck();
         balance = startingMoney;
         wins = 0;
         losses = 0;
         name = _name;
         socket = _socket;
-        input = new DataInputStream(socket.getInputStream());
-        output = new DataOutputStream(socket.getOutputStream());
+        try {
+            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream(socket.getOutputStream());
+        } catch (Exception e) {
+        }
     }
 
-    public Gambler(CardDeck _hand, double startingMoney, String _name) {
+    public Player(CardDeck _hand, double startingMoney, String _name) {
         hand = _hand;
         balance = startingMoney;
         wins = 0;
@@ -32,7 +33,7 @@ public class Gambler {
         name = _name;
     }
 
-    public Gambler(double startingMoney, String _name) {
+    public Player(double startingMoney, String _name) {
         hand = new CardDeck();
         balance = startingMoney;
         wins = 0;
@@ -40,7 +41,7 @@ public class Gambler {
         name = _name;
     }
 
-    public Gambler(String _name) {
+    public Player(String _name) {
         hand = new CardDeck();
         balance = 0;
         wins = 0;
@@ -81,7 +82,26 @@ public class Gambler {
         return output;
     }
 
-    // Setters
+    public String getInput() {
+        try {
+            return DataInputStream.readUTF(input);
+        } catch (Exception e) {
+            if (socket.isConnected())
+                return getInput();
+        }
+        return "Player Has Disconnected";
+    }
+
+    // Non-Getters
+    public void sendOutput(String message) {
+        try {
+            output.writeBytes(message);
+        } catch (Exception e) {
+            if (socket.isConnected())
+                sendOutput(message);
+        }
+    }
+
     public void giveMoney(int give) {
         balance += give;
     }
@@ -96,26 +116,6 @@ public class Gambler {
             return "You now have $" + balance + " left";
         }
         return "You do not have enough money";
-    }
-
-    public void win(int moneyWon) {
-        wins++;
-        balance += moneyWon;
-    }
-
-    public void win(int moneyWon, int numberOfWins) {
-        wins += numberOfWins;
-        balance += moneyWon;
-    }
-
-    public void lose(int moneyLost) {
-        losses++;
-        balance -= moneyLost;
-    }
-
-    public void lose(int moneyLost, int numberOfLosses) {
-        losses += numberOfLosses;
-        balance -= moneyLost;
     }
 
     public void setHand(CardDeck newHand) {

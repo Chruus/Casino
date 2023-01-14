@@ -6,8 +6,8 @@ import java.util.*;
 //Import java.net.*;
 
 public class Casino {
-    public static ArrayList<Gambler> players = new ArrayList<Gambler>();
-    public static ArrayList<Gambler> playersInQueue = new ArrayList<Gambler>();
+    public static ArrayList<Player> players = new ArrayList<Player>();
+    public static ArrayList<Player> playersInQueue = new ArrayList<Player>();
 
     public static void main(String[] args) throws IOException {
         Scanner input = new Scanner(System.in);
@@ -19,7 +19,7 @@ public class Casino {
         double startingMoney = Double.parseDouble(line);
 
         System.out.print("Enter which game you would like to play: ");
-        Gambler player = new Gambler(new CardDeck(), startingMoney, name);
+        Player player = new Player(new CardDeck(), startingMoney, name);
         TexasHoldem texasHoldem = new TexasHoldem();
 
         while (!line.equals("exit")) {

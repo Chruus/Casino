@@ -3,8 +3,8 @@
 import java.util.*;
 
 public class Blackjack extends Game {
-    Gambler player;
-    Gambler dealer;
+    Player player;
+    Player dealer;
     CardDeck playerHand;
     CardDeck dealerHand;
     CardDeck deck;
@@ -15,14 +15,14 @@ public class Blackjack extends Game {
     private boolean open;
     private boolean setupDone = false;;
 
-    public Blackjack(Gambler player_) {
+    public Blackjack(Player player_) {
 
         deck = new CardDeck(false);
         for (int i = 0; i < 100; i++) {
             deck.shuffle();
         }
         player = player_;
-        dealer = new Gambler(new CardDeck(), 0, "dealer");
+        dealer = new Player(new CardDeck(), 0, "dealer");
         playerHand = new CardDeck();
         dealerHand = dealer.getHand();
         open = true;
