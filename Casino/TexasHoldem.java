@@ -14,7 +14,7 @@ public class TexasHoldem extends Game {
 
     public void play() {// Plays Texas Holdem until there aren't enough players
         while (enoughPlayers()) {
-            activePlayers = Casino.players;
+            activePlayers = CasinoV2.players;
             spread = new CardDeck();
             deck = new CardDeck(false);
             deck.shuffle();
@@ -72,7 +72,7 @@ public class TexasHoldem extends Game {
     }
 
     private boolean enoughPlayers() {
-        if (Casino.players.size() < minimumNumberOfPlayers)
+        if (CasinoV2.players.size() < minimumNumberOfPlayers)
             return false;
         return true;
     }
@@ -151,6 +151,10 @@ public class TexasHoldem extends Game {
         }
     }
 
+    private int numberIn(String line) {
+        return 0;
+    }
+
     private String getInput(Player player) {// Takes line from player and checks it for commands, then returns line
         String line = player.getInput();
         if (line.toLowerCase().equals("exit") || line.equals("Player Has Disconnected")) {
@@ -158,21 +162,6 @@ public class TexasHoldem extends Game {
             return "";
         }
         return line;
-    }
-
-    private int numberIn(String line) {// Checks string to see if it has a number in it
-        Scanner lineScan = new Scanner(line);
-        int output;
-        while (lineScan.hasNext()) {
-            try {
-                output = Integer.parseInt(lineScan.next());
-                // lineScan.close();
-                return output;
-            } catch (Exception e) {
-            }
-        }
-        // lineScan.close();
-        return -1;
     }
 
     private String whoWins() {

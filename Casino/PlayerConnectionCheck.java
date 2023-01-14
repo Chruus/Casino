@@ -18,9 +18,9 @@ public class PlayerConnectionCheck implements Runnable {
     private void checkConnectedPlayers() {
         for (int player = 0; player < CasinoV2.players.size(); player++) {
             try {
-                Casino.players.get(player).getInputStream().read();
+                CasinoV2.players.get(player).getInputStream().read();
             } catch (Exception e) {
-                Casino.players.remove(player);
+                CasinoV2.players.remove(player);
                 player--;
             }
         }
