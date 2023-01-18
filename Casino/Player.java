@@ -110,12 +110,12 @@ public class Player {
         balance = money;
     }
 
-    public String takeMoney(double taken) {
+    public double takeMoney(double taken) {
         if (balance >= taken) {
             balance -= taken;
-            return "You now have $" + balance + " left";
+            return balance;
         }
-        return "You do not have enough money";
+        return -1;
     }
 
     public void setHand(CardDeck newHand) {

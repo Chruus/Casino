@@ -19,20 +19,24 @@ public class CasinoV2 {
 
     private static void setupServer() {
         System.out.print("Enter Port Number: ");
-        int port;
-        do {
+        int port = -1;
+        try {
             port = Integer.parseInt(Console.getInput());
-        } while (Console.getInput().matches("^[0-9]+"));
+        } catch (Exception e) {
+            System.out.println("Invalid Port Number");
+            setupServer();
+        }
         new PlayerJoinCheck(port);
     }
 
     private static void setupGame() {
         System.out.print("Enter Game: ");
-        String line;
-        do {
-            line = Console.getInput();
-            line.toLowerCase();
-        } while (!Console.getInput().equals("texas holdem"));
-        game = new TexasHoldem();
+        String line = Console.getInput();
+        if (line.equals("texas holdem")) {
+            game = new TexasHoldem();
+            return;
+        }
+        System.out.println(line + " is not a supported game");
+        setupGame();
     }
 }
