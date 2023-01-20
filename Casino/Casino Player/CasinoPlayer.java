@@ -48,17 +48,6 @@ public class CasinoPlayer {
         }
     }
 
-    private static String getInput() {
-        String in = "";
-        try {
-            in = input.readUTF();
-        } catch (Exception e) {
-            pause(1000);
-            in = getInput();
-        }
-        return in;
-    }
-
     public static Socket getSocket() {
         return socket;
     }
