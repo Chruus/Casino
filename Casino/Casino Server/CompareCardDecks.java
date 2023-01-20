@@ -135,7 +135,7 @@ public class CompareCardDecks implements Comparator<CardDeck> {
 
         Scanner outputScan = new Scanner(three);
         String threeNumeral = outputScan.next();
-        // outputScan.close();
+        outputScan.close();
 
         for (int card = 0; card < deck.getSize(); card++) {
             if (deck.get(card).getNumeral().equals(threeNumeral))
@@ -159,7 +159,7 @@ public class CompareCardDecks implements Comparator<CardDeck> {
 
         Scanner outputScan = new Scanner(output);
         String firstPair = outputScan.next();
-        // outputScan.close();
+        outputScan.close();
 
         for (int card = 0; card < deck.getSize(); card++) {
             if (deck.get(card).getNumeral().equals(firstPair))

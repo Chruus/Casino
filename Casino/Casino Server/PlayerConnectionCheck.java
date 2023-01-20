@@ -7,7 +7,6 @@ public class PlayerConnectionCheck implements Runnable {
     }
 
     public void run() {
-        System.out.println("Remove");
         checkConnectedPlayers();
         try {
             Thread.sleep(10000);
@@ -16,11 +15,11 @@ public class PlayerConnectionCheck implements Runnable {
     }
 
     private void checkConnectedPlayers() {
-        for (int player = 0; player < CasinoV2.players.size(); player++) {
+        for (int player = 0; player < Casino.players.size(); player++) {
             try {
-                CasinoV2.players.get(player).getInputStream().read();
+                Casino.players.get(player).getInputStream().read();
             } catch (Exception e) {
-                CasinoV2.players.remove(player);
+                Casino.players.remove(player);
                 player--;
             }
         }

@@ -19,10 +19,13 @@ public class TexasHoldem extends Game {
     private int minimumNumberOfPlayers;
 
     public void setup() {
-        if (!enoughPlayers())
+        if (!enoughPlayers()) {
             waitForPlayers();
+            setup();
+        }
         for (Player player : activePlayers)
             bets.put(player, 0);
+        pool = 0;
         activePlayers = Casino.players;
         spread = new CardDeck();
         deck = new CardDeck(false);
@@ -38,12 +41,15 @@ public class TexasHoldem extends Game {
         bettingRound("river");
         bettingRound("showdown");
 
-        String winner = whoWins();
+        checkWhoWins();
+    }
+
+    private void checkWhoWins() {
+        Player winner = whoWins();
         for (Player player : activePlayers) {
             player.sendOutput(winner + " wins $" + pool + "!");
             activePlayers.remove(player);
         }
-        pool = 0;
     }
 
     private void bettingRound(String bettingRound) {
@@ -62,17 +68,18 @@ public class TexasHoldem extends Game {
     private void waitForPlayers() {
         double startTime = System.currentTimeMillis();
         double currentTime = 0;
+        System.out.println("Waiting for players...");
         while (currentTime - startTime < 10000)
             currentTime = System.currentTimeMillis();
     }
 
     private boolean enoughPlayers() {
-        if (CasinoV2.players.size() < minimumNumberOfPlayers)
+        if (Casino.players.size() < minimumNumberOfPlayers)
             return false;
         return true;
     }
 
-    private void dealHands() {// Gives each player 2 cards
+    private void dealHands() {
         for (int player = 0; player < activePlayers.size(); player++) {
             CardDeck hand = new CardDeck();
             hand.add(deck.draw());
@@ -81,39 +88,40 @@ public class TexasHoldem extends Game {
         }
     }
 
-    private void dealSpread(String bettingRoung) {// Adds cards to spread
+    private void dealSpread(String bettingRoung) {
         if (bettingRoung.equals("flop")) {
             for (int i = 0; i < 3; i++)
                 spread.add(deck.draw());
         } else if (bettingRoung.equals("river") || bettingRoung.equals("showdown")) {
             spread.add(deck.draw(), spread.getSize() - 1);
         }
+        System.out.println("Dealt Spread");
     }
 
-    private void showHand(Player player) {// Prints hand
+    private void showHand(Player player) {
         String output = "Your Hand:\n" + player.getHand() + "\n";
         player.sendOutput(output);
     }
 
-    private void showSpread(String position) {// Prints out spread
-        String output = "\nThe " + position + ": \n" + spread + "\n";
+    private void showSpread(String position) {
+        String output = "The " + position + ": \n" + spread + "\n";
         for (Player player : activePlayers)
             player.sendOutput(output);
     }
 
     private void placeBet(Player player) {// Takes bet of a certain player & adds it to the pool
-        player.sendOutput("\nThe current bet is $" + minimumBet + ". Please bet, check, or fold.\n");
+        player.sendOutput("The current bet is $" + minimumBet + ". Please bet, check, or fold.\n");
         String line = getInput(player);
         int bet = 0;
 
-        if (line.indexOf("fold") >= 0) {// Handles you folding (quitting)
+        if (line.equals("fold")) {// Handles you folding (quitting)
             fold(player);
             return;
         }
 
-        if (line.indexOf("check") >= 0 || bet == 0) {// Handles you checking (betting 0)
+        if (line.equals("check")) {// Handles you checking (betting 0)
             if (minimumBet > 0) {// If anyone has bet before you, asks for you to bet again
-                player.sendOutput("\nYou need to bet at least $" + minimumBet + "\n");
+                player.sendOutput("You need to bet at least $" + minimumBet + "\n");
                 placeBet(player);
             }
             return;
@@ -122,20 +130,25 @@ public class TexasHoldem extends Game {
         try {
             bet = Integer.parseInt(line);
         } catch (Exception e) {
-            player.sendOutput("Please bet, check, or fold.");
+            player.sendOutput("Please bet, check, or fold.\n");
             placeBet(player);
         }
 
         if (bet >= minimumBet) {
             if (player.getBalance() >= bet) {
                 pool += bet;
+                bets.put(player, bet);
                 player.takeMoney(bet);
+                System.out.println("Player " + player.getName() + " bets " + bet);
             } else {
-                player.sendOutput("\nThat exceedes your balance of $" + player.getBalance() + "\n");
+                player.sendOutput("That exceedes your balance of $" + player.getBalance() + "\n");
                 placeBet(player);
             }
             if (bet > minimumBet)
                 raiseBet(bet);
+        } else {
+            player.sendOutput("You need to bet at least $" + minimumBet + "\n");
+            placeBet(player);
         }
     }
 
@@ -143,11 +156,32 @@ public class TexasHoldem extends Game {
         if (!hasRaisedBet)
             return;
         for (Player player : activePlayers) {
-            player.sendOutput("The bet has been raised to " + minimumBet + ". Would you like to match it?");
-            String reply = player.getInput();
-            if (reply.equals("yes") || reply.equals("y"))
-                
+            int bet = bets.get(player);
+            if (bet < minimumBet) {
+                askToRaiseBet(player, bet);
+            }
         }
+    }
+
+    private void askToRaiseBet(Player player, int bet) {
+        int raise = minimumBet - bet;
+        player.sendOutput("The bet has been raised to " + minimumBet + ". Would you like to match it?");
+        String reply = player.getInput().toLowerCase();
+        if (reply.equals("yes") || reply.equals("y")) {
+            if (player.getBalance() >= raise) {
+                pool += raise;
+                bets.put(player, raise);
+                player.takeMoney(raise);
+            } else {
+                player.sendOutput("That exceedes your balance of $" + player.getBalance() + "\n");
+                askToRaiseBet(player, bet);
+            }
+        } else if (reply.equals("no") || reply.equals("n")) {
+            fold(player);
+        } else {
+            player.sendOutput("Invalid input. Please type yes or no\n");
+        }
+        bets.remove(player);
     }
 
     private void fold(Player player) {
@@ -168,19 +202,19 @@ public class TexasHoldem extends Game {
         return line;
     }
 
-    private String whoWins() {
+    private Player whoWins() {
         ArrayList<CardDeck> playerDecks = new ArrayList<CardDeck>();
-        HashMap<CardDeck, String> deckToName = new HashMap<CardDeck, String>();
+        HashMap<CardDeck, Player> deckToPlayer = new HashMap<CardDeck, Player>();
 
-        // Puts cards and spread into one deck
-        for (int player = 0; player < activePlayers.size(); player++) {// Incorrectly sets up playerDecks
+        for (int player = 0; player < activePlayers.size(); player++) {
             playerDecks.add(player, new CardDeck());
             playerDecks.get(player).addCardDeck(activePlayers.get(player).getHand());
+            deckToPlayer.put(playerDecks.get(player), activePlayers.get(player));
         }
 
-        // System.out.println(playerDecks);
         Collections.sort(playerDecks, new CompareCardDecks("texas holdem"));
 
-        return deckToName.get(playerDecks.get(0));
+        Player winner = deckToPlayer.get(playerDecks.get(0));
+        return winner;
     }
 }

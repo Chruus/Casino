@@ -15,12 +15,10 @@ public class PlayerJoinCheck implements Runnable {
         }
         thread = new Thread(this);
         thread.start();
-        new PlayerConnectionCheck();
     }
 
     public void run() {
         while (true) {
-            System.out.println("Listen");
             setupNewPlayer();
             try {
                 Thread.sleep(10000);
@@ -35,7 +33,7 @@ public class PlayerJoinCheck implements Runnable {
         String name = getMessage();
         sendMessage("How much money would you like to withdraw?\n$");
         double balance = Double.parseDouble(getMessage());
-        CasinoV2.players.add(new Player(balance, name, socket));
+        Casino.players.add(new Player(balance, name, socket));
     }
 
     private void checkNewPlayers() {
@@ -43,14 +41,17 @@ public class PlayerJoinCheck implements Runnable {
             socket = server.accept();
             input = new DataInputStream(socket.getInputStream());
             output = new DataOutputStream(socket.getOutputStream());
+            System.out.println("A player has connected");
 
         } catch (IOException e) {
         }
     }
 
     private void sendMessage(String message) {
+        System.out.println("sending message");
         try {
             output.writeBytes(message);
+            System.out.println("sent message");
         } catch (IOException e) {
             if (socket.isConnected())
                 sendMessage(message);
@@ -58,8 +59,11 @@ public class PlayerJoinCheck implements Runnable {
     }
 
     private String getMessage() {
+        System.out.println("reading message");
         try {
-            return input.readUTF();
+            String out = input.readUTF();
+            System.out.println("reading message");
+            return out;
         } catch (IOException e) {
             if (socket.isConnected())
                 getMessage();

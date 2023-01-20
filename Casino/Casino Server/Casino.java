@@ -1,18 +1,19 @@
 import java.util.*;
 
-public class CasinoV2 {
+public class Casino {
     public static ArrayList<Player> players;
     private static Game game;
 
     private static void setup() {
         players = new ArrayList<Player>();
+        new Console();
         setupServer();
         setupGame();
     }
 
     public static void main(String[] args) {
         setup();
-        while (Console.getInput() == null || !Console.getInput().equals("stop")) {
+        while (true) {
             game.play();
         }
     }
@@ -20,13 +21,9 @@ public class CasinoV2 {
     private static void setupServer() {
         System.out.print("Enter Port Number: ");
         int port = -1;
-        try {
-            port = Integer.parseInt(Console.getInput());
-        } catch (Exception e) {
-            System.out.println("Invalid Port Number");
-            setupServer();
-        }
+        port = Console.getIntInput();
         new PlayerJoinCheck(port);
+        new PlayerConnectionCheck();
     }
 
     private static void setupGame() {
