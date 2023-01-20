@@ -26,7 +26,7 @@ public class TexasHoldem extends Game {
         for (Player player : activePlayers)
             bets.put(player, 0);
         pool = 0;
-        activePlayers = Casino.players;
+        activePlayers = OldCasino.players;
         spread = new CardDeck();
         deck = new CardDeck(false);
         deck.shuffle();
@@ -74,7 +74,7 @@ public class TexasHoldem extends Game {
     }
 
     private boolean enoughPlayers() {
-        if (Casino.players.size() < minimumNumberOfPlayers)
+        if (OldCasino.players.size() < minimumNumberOfPlayers)
             return false;
         return true;
     }

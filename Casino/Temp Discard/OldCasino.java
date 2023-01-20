@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 //Import java.net.*;
 
-public class Casino {
+public class OldCasino {
     public static ArrayList<Player> players = new ArrayList<Player>();
     public static ArrayList<Player> playersInQueue = new ArrayList<Player>();
 

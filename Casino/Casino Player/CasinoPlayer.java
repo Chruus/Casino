@@ -16,6 +16,7 @@ public class CasinoPlayer {
             socket = new Socket(ip, port);
             input = new DataInputStream(socket.getInputStream());
             output = new DataOutputStream(socket.getOutputStream());
+            new ServerListener();
         } catch (Exception e) {
         }
     }
@@ -24,7 +25,7 @@ public class CasinoPlayer {
         setup();
         String line;
         do {
-            System.out.print(getInput());
+            System.out.print(ServerListener.getInput());
             line = Console.getInput();
             sendOutput(line);
         } while (!line.equals("exit"));
@@ -56,5 +57,17 @@ public class CasinoPlayer {
             in = getInput();
         }
         return in;
+    }
+
+    public static Socket getSocket() {
+        return socket;
+    }
+
+    public static DataInputStream getDataInputStream() {
+        return input;
+    }
+
+    public static DataOutputStream getDataOutputStream() {
+        return output;
     }
 }

@@ -33,7 +33,7 @@ public class PlayerJoinCheck implements Runnable {
         String name = getMessage();
         sendMessage("How much money would you like to withdraw?\n$");
         double balance = Double.parseDouble(getMessage());
-        Casino.players.add(new Player(balance, name, socket));
+        OldCasino.players.add(new Player(balance, name, socket));
     }
 
     private void checkNewPlayers() {
