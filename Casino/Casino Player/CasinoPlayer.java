@@ -12,12 +12,17 @@ public class CasinoPlayer {
         String ip = Console.getInput();
         System.out.print("Server's Port: ");
         int port = Console.getIntInput();
+        System.out.println(0);
         try {
+            System.out.println(1);
             socket = new Socket(ip, port);
+            System.out.println(2);
             input = new DataInputStream(socket.getInputStream());
             output = new DataOutputStream(socket.getOutputStream());
+            System.out.println(3);
             new ServerListener();
         } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
@@ -25,8 +30,11 @@ public class CasinoPlayer {
         setup();
         String line;
         do {
+            System.out.println(1);
             System.out.print(ServerListener.getInput());
+            System.out.println(2);
             line = Console.getInput();
+            System.out.println(3);
             sendOutput(line);
         } while (!line.equals("exit"));
     }

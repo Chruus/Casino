@@ -20,10 +20,6 @@ public class PlayerJoinCheck implements Runnable {
     public void run() {
         while (true) {
             setupNewPlayer();
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-            }
         }
     }
 
@@ -36,12 +32,21 @@ public class PlayerJoinCheck implements Runnable {
         OldCasino.players.add(new Player(balance, name, socket));
     }
 
+    private void wait(double ms) {
+        double startTime = System.currentTimeMillis();
+        double endTime = System.currentTimeMillis();
+        while (endTime - startTime < ms) {
+            endTime = System.currentTimeMillis();
+        }
+    }
+
     private void checkNewPlayers() {
         try {
             socket = server.accept();
             input = new DataInputStream(socket.getInputStream());
             output = new DataOutputStream(socket.getOutputStream());
-            System.out.println("A player has connected");
+            System.out.println(
+                    socket.getPort() + " " + socket.isBound() + " " + socket.isConnected() + " " + socket.isClosed());
 
         } catch (IOException e) {
         }
@@ -50,10 +55,9 @@ public class PlayerJoinCheck implements Runnable {
     private void sendMessage(String message) {
         System.out.println("sending message");
         try {
-            output.writeBytes(message);
-            System.out.println("sent message");
+            output.writeUTF(message);
         } catch (IOException e) {
-            if (socket.isConnected())
+            if (socket.isBound())
                 sendMessage(message);
         }
     }
@@ -65,7 +69,7 @@ public class PlayerJoinCheck implements Runnable {
             System.out.println("reading message");
             return out;
         } catch (IOException e) {
-            if (socket.isConnected())
+            if (socket.isBound())
                 getMessage();
         }
         return "";
